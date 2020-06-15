@@ -1,5 +1,5 @@
-const express = require('express')
-const user = require('./user')
+import express from 'express'
+import user from './user.js'
 
 const router = new express.Router()
 
@@ -9,4 +9,4 @@ router.get('/', (_, res) => {
 
 router.use('/', user)
 
-module.exports = router
+export default router

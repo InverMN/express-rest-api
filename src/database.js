@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const config = {
 	uris: 'mongodb://localhost:27017/blog',
@@ -13,4 +13,4 @@ mongoose.connect(config.uris, config.options)
 mongoose.connection.once('open', () => console.info('Connected to database'))
 mongoose.connection.on('error', error => console.error(error))
 
-module.exports = mongoose.connection
+export default mongoose.connection

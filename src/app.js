@@ -1,8 +1,8 @@
-const express = require('express')
-const bodyParser = require("body-parser")
+import express from 'express'
+import bodyParser from 'body-parser'
 
-const database = require('./database')
-const controllers = require('./controllers/controllers')
+import database from './database.js'
+import controllers from './controllers/controllers.js'
 
 const app = express()
 
