@@ -12,3 +12,5 @@ mongoose.connect(config.uris, config.options)
 
 mongoose.connection.once('open', () => console.info('Connected to database'))
 mongoose.connection.on('error', error => console.error(error))
+
+module.exports = mongoose.connection
