@@ -5,7 +5,7 @@ import { hashPassword } from '../services/password.js'
 
 const router = new express.Router()
 
-router.get('/users', Secure.OWNER, async (req, res) => {
+router.get('/users', Secure.MODERATOR, async (req, res) => {
 	const users = await User.find()
 	res.json(users)
 })

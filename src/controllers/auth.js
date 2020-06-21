@@ -21,24 +21,27 @@ router.post('/login', async (req, res) => {
 
 		const accessToken = generateAccessToken(user._id)
 		const refreshToken = generateRefreshToken(user._id)
+		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: 86_400_000*15, httpOnly: true })
 		res.json({ accessToken, refreshToken })
 	} catch (error) {
 		res.status(400).send(error)
 	}
 })
 
-router.post('/token', async (req, res) => {
+router.post('/refresh', async (req, res) => {
 	try {
-		const token = req.body.token
+		const token = req.cookies.REFRESH_TOKEN
 	
 		if(!token || await Token.exists({ body: token }))
 			throw null
 	
 		await new Token({ body: token }).save()
-		const user = await verifyRefreshToken(token, process.env.REFRESH_TOKEN_SECRET)
+		const user = await verifyRefreshToken(token)
 
 		const accessToken = generateAccessToken(user.id)
-		res.json({ accessToken })
+		const refreshToken = generateRefreshToken(user.id)
+		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: 86_400_000*15, httpOnly: true })
+		res.json({ accessToken, refreshToken })
 	} catch {
 		return res.sendStatus(401)
 	}

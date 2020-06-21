@@ -1,7 +1,7 @@
 import JWT from 'jsonwebtoken'
 
 export const generateAccessToken = userId => {
-	return JWT.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
+	return JWT.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' })
 }
 
 export const generateRefreshToken = userId => {

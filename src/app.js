@@ -11,6 +11,7 @@ import controllers from './controllers/controllers.js'
 const app = express()
 
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 app.get('/', (_, res) => res.send('Homepage'))
 app.use('/api', controllers)
