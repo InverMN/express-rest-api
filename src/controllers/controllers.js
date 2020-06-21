@@ -1,5 +1,7 @@
 import express from 'express'
 import user from './user.js'
+import auth from './auth.js'
+import post from './post.js'
 
 const router = new express.Router()
 
@@ -8,5 +10,7 @@ router.get('/', (_, res) => {
 })
 
 router.use('/', user)
+router.use('/', auth)
+router.use('/', post)
 
 export default router

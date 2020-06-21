@@ -1,6 +1,9 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 
+import dotenv from 'dotenv'
+dotenv.config()
+
 import database from './database.js'
 import controllers from './controllers/controllers.js'
 

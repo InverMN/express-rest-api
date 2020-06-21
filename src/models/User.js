@@ -4,9 +4,8 @@ const Schema = mongoose.Schema
 const data = {
 	username: String,
 	hashedPassword: String,
-	email: String
+	email: String,
+	isModerator: Boolean
 }
 
-const model = mongoose.model('user', new Schema(data))
-
-export default model
+export default mongoose.model('user', new Schema(data))

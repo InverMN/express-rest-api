@@ -1,12 +1,13 @@
 import express from 'express'
 import User from '../models/User.js'
+import Secure from '../middleware/secured.js'
 import { hashPassword } from '../services/password.js'
 
 const router = new express.Router()
 
-router.get('/users', async (req, res) => {
+router.get('/users', Secure.OWNER, async (req, res) => {
 	const users = await User.find()
-	res.send(users)
+	res.json(users)
 })
 
 router.post('/users', async (req, res) => {
@@ -38,9 +39,9 @@ router.delete('/users/:id', async (req, res) => {
 		res.status(404)
 		res.send({ error: "User doesn't exist!" })
 	}
-})
+})	
 
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/:id', Secure.OWNER, async (req, res) => {
 	try {
 		const user = await User.findOne({ _id: req.params.id })
 
