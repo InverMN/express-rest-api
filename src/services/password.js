@@ -1,9 +1,7 @@
 import Bcrypt from 'bcrypt'
 
 export const hashPassword = password => {
-	const hashedPassword = Bcrypt.hashSync(password, process.env.PASSWORD_HASH_SALT)
-
-	return hashedPassword
+	return Bcrypt.hashSync(password, process.env.PASSWORD_HASH_SALT)
 }
 
 export const verifyPassword = (password, hashedPassword) => {
