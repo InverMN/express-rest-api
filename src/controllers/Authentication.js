@@ -4,13 +4,13 @@ import { generateAccessToken,  generateRefreshToken, verifyRefreshToken } from '
 import User from '../models/User.js'
 import Token from '../models/Token.js'
 
-const router = new express.Router()
+export const Authentication = new express.Router()
 
-router.post('/register', async (req, res) => {
+Authentication.post('/register', async (req, res) => {
 	console.log('Register')
 })
 
-router.post('/login', async (req, res) => {
+Authentication.post('/login', async (req, res) => {
 	try {
 		const { email, password } = req.body
 		const user = await User.findOne({ email: email, hashedPassword: hashPassword(password) })
@@ -28,7 +28,7 @@ router.post('/login', async (req, res) => {
 	}
 })
 
-router.post('/refresh', async (req, res) => {
+Authentication.post('/refresh', async (req, res) => {
 	try {
 		const token = req.cookies.REFRESH_TOKEN
 	
@@ -47,9 +47,7 @@ router.post('/refresh', async (req, res) => {
 	}
 })
 
-router.delete('/logout', async (req, res) => {
+Authentication.delete('/logout', async (req, res) => {
 	await new Token({ body: req.body.token }).save()
 	res.sendStatus(204)
 })
-
-export default router

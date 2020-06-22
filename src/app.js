@@ -1,19 +1,25 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-
 import dotenv from 'dotenv'
-dotenv.config()
-
 import database from './database.js'
-import controllers from './controllers/controllers.js'
+import * as Controllers from './controllers/index.js'
 
-const app = express()
+database.once('open', () => {
+	dotenv.config()
 
-app.use(bodyParser.json())
-app.use(cookieParser())
+	const app = express()
 
-app.get('/', (_, res) => res.send('Homepage'))
-app.use('/api', controllers)
+	app.use(bodyParser.json())
+	app.use(cookieParser())
 
-app.listen(5500)
+	app.get('/', (_, res) => res.send('Homepage'))
+	
+	/* Add controllers to app */
+	for(const controller in Controllers) {
+		app.use('/', Controllers[controller])
+	}
+	
+	/* Start listening */
+	app.listen(5500)
+})

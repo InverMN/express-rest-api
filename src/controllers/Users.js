@@ -3,14 +3,14 @@ import User from '../models/User.js'
 import Secure from '../middleware/secured.js'
 import { hashPassword } from '../services/password.js'
 
-const router = new express.Router()
+export const Users = new express.Router()
 
-router.get('/users', Secure.MODERATOR, async (req, res) => {
+Users.get('/users', Secure.MODERATOR, async (req, res) => {
 	const users = await User.find()
 	res.json(users)
 })
 
-router.post('/users', async (req, res) => {
+Users.post('/users', async (req, res) => {
 	const data = req.body
 
 	if(data.username && data.password && data.email) {
@@ -26,12 +26,12 @@ router.post('/users', async (req, res) => {
 	else res.send('Incorrect input data structure')
 })
 
-router.get('/users/:id', async (req, res) => {
+Users.get('/users/:id', async (req, res) => {
 	const user = await User.findOne({ _id: req.params.id })
 	res.send(user)
 })
 
-router.delete('/users/:id', async (req, res) => {
+Users.delete('/users/:id', async (req, res) => {
 	try {
 		await User.deleteOne({ _id: req.params.id })
     res.status(204).send()
@@ -41,7 +41,7 @@ router.delete('/users/:id', async (req, res) => {
 	}
 })	
 
-router.patch('/users/:id', Secure.OWNER, async (req, res) => {
+Users.patch('/users/:id', Secure.OWNER, async (req, res) => {
 	try {
 		const user = await User.findOne({ _id: req.params.id })
 
@@ -61,5 +61,3 @@ router.patch('/users/:id', Secure.OWNER, async (req, res) => {
 		res.send({ error: "User does not exist" })
 	}
 })
-
-export default router
