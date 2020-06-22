@@ -13,6 +13,7 @@ database.once('open', () => {
 	app.use(bodyParser.json())
 	app.use(cookieParser())
 
+	app.use('/static', express.static('public'))
 	app.get('/', (_, res) => res.send('Homepage'))
 	
 	/* Add controllers to app */
