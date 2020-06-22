@@ -21,5 +21,7 @@ database.once('open', () => {
 	}
 	
 	/* Start listening */
-	app.listen(5500)
+	const port = parseInt(process.env.PORT)
+	app.listen(port)
+	console.info(`Listening on localhost:${port}`)
 })
