@@ -5,7 +5,8 @@ function cutWord(word, start, end) {
 const causesWithResponds = {
 	'is shorter': 'too short',
 	'is longer': 'too long',
-	'required': 'required'
+	'required': 'missing',
+	'invalid': 'invalid'
 }
 
 export default function(error) {
