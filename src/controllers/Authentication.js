@@ -3,13 +3,29 @@ import { hashPassword }  from '../services/password.js'
 import { generateAccessToken,  generateRefreshToken, verifyRefreshToken } from '../services/jwt.js'
 import User from '../models/User.js'
 import Token from '../models/Token.js'
+import parse from '../services/invalidParser.js'
 
 export const Authentication = new express.Router()
 
 const day = 86400000
 
-Authentication.post('/register', async () => {
-	console.log('Register')
+Authentication.post('/register', async (req, res) => {
+	try {
+		const { username, email, password } = req.body
+
+		if(password === undefined) return res.status(400).send({ source: 'password', cause: 'missing' })
+
+		const user = new User({ email, hashedPassword: hashPassword(password), username })
+		await user.save()
+	
+		const accessToken = generateAccessToken(user._id)
+		const refreshToken = generateRefreshToken(user._id)
+		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
+		res.json({ accessToken, refreshToken })
+	} catch (error) {
+		res.status(400)
+		res.send(parse(error.message))
+	}
 })
 
 Authentication.post('/login', async (req, res) => {
