@@ -37,7 +37,7 @@ Users.delete('/users/:id', async (req, res) => {
     res.status(204).send()
 	} catch {
 		res.status(404)
-		res.send({ error: "User doesn't exist!" })
+		res.send({ error: 'User doesn\'t exist!' })
 	}
 })	
 
@@ -58,6 +58,6 @@ Users.patch('/users/:id', Secure.OWNER, async (req, res) => {
 		res.send(user)
 	} catch {
 		res.status(404)
-		res.send({ error: "User does not exist" })
+		res.send({ error: 'User does not exist' })
 	}
 })

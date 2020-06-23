@@ -6,7 +6,9 @@ import Token from '../models/Token.js'
 
 export const Authentication = new express.Router()
 
-Authentication.post('/register', async (req, res) => {
+const day = 86400000
+
+Authentication.post('/register', async () => {
 	console.log('Register')
 })
 
@@ -21,7 +23,7 @@ Authentication.post('/login', async (req, res) => {
 
 		const accessToken = generateAccessToken(user._id)
 		const refreshToken = generateRefreshToken(user._id)
-		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: 86_400_000*15, httpOnly: true })
+		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
 		res.json({ accessToken, refreshToken })
 	} catch (error) {
 		res.status(400).send(error)
@@ -40,7 +42,7 @@ Authentication.post('/refresh', async (req, res) => {
 
 		const accessToken = generateAccessToken(user.id)
 		const refreshToken = generateRefreshToken(user.id)
-		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: 86_400_000*15, httpOnly: true })
+		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
 		res.json({ accessToken, refreshToken })
 	} catch {
 		return res.sendStatus(401)

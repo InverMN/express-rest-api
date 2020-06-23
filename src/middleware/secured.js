@@ -3,7 +3,7 @@ import User from '../models/User.js'
 
 const extractUserId = async request => {
 	try {
-		const authHeader = request.headers['authorization']
+		const authHeader = request.headers.authorization
 		const token = authHeader && authHeader.split(' ')[1]
 		const userId = (await verifyAccessToken(token)).id 
 		return userId
@@ -28,9 +28,9 @@ const secureLogged = async (req, res, next) => {
 }
 
 function verifyOwnership(ownerRelation) {
-	if(this.user._id == ownerRelation || this.user.isModerator)
+	if(this.user._id === ownerRelation || this.user.isModerator)
 		return true
-	else if(ownerRelation == null) {
+	else if(ownerRelation === null) {
 		this.response.sendStatus(500)
 		throw 'Response body does not contain owner property'
 	}
