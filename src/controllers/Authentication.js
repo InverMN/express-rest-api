@@ -13,7 +13,8 @@ Authentication.post('/register', async (req, res) => {
 	try {
 		const { username, email, password } = req.body
 
-		if(password === undefined) return res.status(400).send({ source: 'password', cause: 'missing' })
+		if(password === undefined) 
+			throw 'missing password'
 
 		const user = new User({ email, hashedPassword: hashPassword(password), username })
 		await user.save()
@@ -24,25 +25,34 @@ Authentication.post('/register', async (req, res) => {
 		res.json({ accessToken, refreshToken })
 	} catch (error) {
 		res.status(400)
-		res.send(parse(error.message))
+		res.send(parse(error))
 	}
 })
 
 Authentication.post('/login', async (req, res) => {
 	try {
 		const { email, password } = req.body
-		const user = await User.findOne({ email: email, hashedPassword: hashPassword(password) })
 
-		if(!user) {
-			return res.status(401).send({ error: 'Login failed! Check authentication credentials' })
-		}
+		if(email === undefined) 
+			throw 'missing email'
+
+		if(password === undefined) 
+			throw 'missing password'
+
+		const user = await User.findOne({ email })
+
+		if(user === null)
+			throw 'incorrect email'
+
+		if(user.hashedPassword !== hashPassword(password))
+			throw 'incorrect password'
 
 		const accessToken = generateAccessToken(user._id)
 		const refreshToken = generateRefreshToken(user._id)
 		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
 		res.json({ accessToken, refreshToken })
 	} catch (error) {
-		res.status(400).send(error)
+		res.status(401).send(parse(error))
 	}
 })
 
