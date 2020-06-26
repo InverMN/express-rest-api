@@ -10,4 +10,4 @@ const data = {
 	}
 }
 
-export default mongoose.model('Post', new Schema(data))
+export const Post = mongoose.model('Post', new Schema(data))

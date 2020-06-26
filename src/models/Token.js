@@ -5,4 +5,4 @@ const data = {
 	body: String
 }
 
-export default mongoose.model('Token', new Schema(data))
+export const Token = mongoose.model('Token', new Schema(data))
