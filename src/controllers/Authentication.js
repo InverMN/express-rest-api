@@ -1,9 +1,8 @@
 import express from 'express'
 import { hashPassword }  from '../services/password.js'
 import { generateAccessToken,  generateRefreshToken, verifyRefreshToken } from '../services/jwt.js'
-import User from '../models/User.js'
-import Token from '../models/Token.js'
-import parse from '../services/invalidParser.js'
+import  { User, Token } from '../models/index.js'
+import parse from '../services/errorParser.js'
 
 export const Authentication = new express.Router()
 
@@ -16,6 +15,12 @@ Authentication.post('/register', async (req, res) => {
 		if(password === undefined) 
 			throw 'missing password'
 
+		if(password.length <= 5)
+			throw 'short password excepted 6'
+
+		if(password.length >= 199)
+			throw 'long password excepted 200'
+
 		const user = new User({ email, hashedPassword: hashPassword(password), username })
 		await user.save()
 	
@@ -24,6 +29,7 @@ Authentication.post('/register', async (req, res) => {
 		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
 		res.json({ accessToken, refreshToken })
 	} catch (error) {
+		console.log('error:', error.message)
 		res.status(400)
 		res.send(parse(error))
 	}

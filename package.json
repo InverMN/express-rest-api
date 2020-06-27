@@ -5,7 +5,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "serve": "nodemon src/app.js"
+    "serve": "nodemon src/index.js",
+    "test": "mocha --timeout 10000 --recursive"
   },
   "author": "Inver",
   "license": "ISC",
@@ -16,10 +17,14 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.18",
-    "nodemon": "^2.0.4"
+    "mongoose": "^5.9.18"
   },
   "devDependencies": {
-    "eslint": "^7.3.1"
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^7.3.1",
+    "mocha": "^8.0.1",
+    "mockgoose": "^8.0.4",
+    "nodemon": "^2.0.4"
   }
 }

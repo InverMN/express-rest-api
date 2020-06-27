@@ -1,5 +1,5 @@
 import express from 'express'
-import User from '../models/User.js'
+import { User } from '../models/index.js'
 import Secure from '../middleware/secured.js'
 import { hashPassword } from '../services/password.js'
 

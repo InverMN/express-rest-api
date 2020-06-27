@@ -1,16 +1,26 @@
 import mongoose from 'mongoose'
+import mockgoose from 'mockgoose'
+const Mockgoose = mockgoose.Mockgoose
 
 const config = {
 	uris: 'mongodb://localhost:27017/blog',
+	testsUris: 'mongodb://localhost:27017/tests',
 	options: {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 	}
 }
 
-mongoose.connect(config.uris, config.options)
+export function openDatabase() {
+	mongoose.connect(config.uris, config.options)
+	mongoose.connection.once('open', () => console.info('Connected to database'))
+	mongoose.connection.on('error', error => console.error(error))
+	return mongoose.connection
+}
 
-mongoose.connection.once('open', () => console.info('Connected to database'))
-mongoose.connection.on('error', error => console.error(error))
-
-export default mongoose.connection
+export function openTestDatabase() {
+	mongoose.connect(config.testsUris, config.options)
+	mongoose.connection.once('open', () => console.info('Connected to database'))
+	mongoose.connection.on('error', error => console.error(error))
+	return mongoose.connection
+}

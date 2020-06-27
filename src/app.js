@@ -2,27 +2,36 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
-import database from './database.js'
+import { openDatabase, openTestDatabase } from './database.js'
 import * as Controllers from './controllers/index.js'
 
-database.once('open', () => {
-	dotenv.config()
+export function run(method = 'production') {
+	let database
 
-	const app = express()
+	if(method === 'production') database = openDatabase() 
+	else if(method === 'tests') database = openTestDatabase()
 
-	app.use(bodyParser.json())
-	app.use(cookieParser())
-
-	app.use('/static', express.static('public'))
-	app.get('/', (_, res) => res.send('Homepage'))
+	database.once('open', () => {
+		dotenv.config()
 	
-	/* Add controllers to app */
-	for(const controller in Controllers) {
-		app.use('/', Controllers[controller])
-	}
+		const app = express()
 	
-	/* Start listening */
-	const port = parseInt(process.env.PORT)
-	app.listen(port)
-	console.info(`Listening on localhost:${port}`)
-})
+		app.use(bodyParser.json())
+		app.use(cookieParser())
+	
+		app.use('/static', express.static('public'))
+		app.get('/', (_, res) => res.send('Homepage'))
+		
+		/* Add controllers to app */
+		for(const controller in Controllers) {
+			app.use('/', Controllers[controller])
+		}
+		
+		/* Start listening */
+		const port = parseInt(process.env.PORT)
+		console.info(`Listening on localhost:${port}`)
+		
+		app.server = app.listen(port)
+		return app
+	})
+}

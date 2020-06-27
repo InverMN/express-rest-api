@@ -1,5 +1,5 @@
 import { verifyAccessToken } from '../services/jwt.js'
-import User from '../models/User.js'
+import { User } from '../models/index.js'
 
 const extractUserId = async request => {
 	try {
