@@ -42,7 +42,7 @@ const schema = new Schema(data)
 //Add middleware
 //Create avatar image path from document's id
 schema.pre('save', function() {
-	this.avatar = `${process.env.STATIC_PATH}/avatars/${this._id}.webp`
+	this.avatar = `${process.env.PATH}/static/avatars/${this._id}.webp`
 })
 
 //Create and export model
