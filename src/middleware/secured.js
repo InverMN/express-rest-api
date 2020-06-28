@@ -28,9 +28,9 @@ const secureLogged = async (req, res, next) => {
 }
 
 function verifyOwnership(ownerRelation) {
-	if(this.user._id === ownerRelation || this.user.isModerator)
+	if(toString(this.user.id) === toString(ownerRelation) || this.user.isModerator) {
 		return true
-	else if(ownerRelation === null) {
+	} else if(ownerRelation === undefined) {
 		this.response.sendStatus(500)
 		throw 'Response body does not contain owner property'
 	}
