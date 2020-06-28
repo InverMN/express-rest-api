@@ -1,6 +1,7 @@
 import express from 'express'
 import { hashPassword }  from '../services/password.js'
-import { generateAccessToken,  generateRefreshToken, verifyRefreshToken } from '../services/jwt.js'
+import { generateAccessToken,  generateRefreshToken, verifyRefreshToken, verifyEmailConfirmationToken} from '../services/jwt.js'
+import { sendConfirmationEmail } from '../services/emailVerification.js'
 import  { User, Token } from '../models/index.js'
 import parse from '../services/errorParser.js'
 
@@ -23,15 +24,30 @@ Authentication.post('/register', async (req, res) => {
 
 		const user = new User({ email, hashedPassword: hashPassword(password), username })
 		await user.save()
+
+		sendConfirmationEmail(user._id, email)
 	
 		const accessToken = generateAccessToken(user._id)
 		const refreshToken = generateRefreshToken(user._id)
 		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
 		res.json({ accessToken, refreshToken })
 	} catch (error) {
-		console.log('error:', error.message)
 		res.status(400)
 		res.send(parse(error))
+	}
+})
+
+Authentication.get('/confirm/:token', async (req, res) => {
+	try {
+		const userId = (await verifyEmailConfirmationToken(req.params.token)).id
+		const user = await User.findOne({ _id: userId })
+
+		user.isVerified = true
+		await user.save()
+
+		res.sendStatus(200)
+	} catch (error) {
+		res.status(401).send(error)
 	}
 })
 
@@ -70,6 +86,7 @@ Authentication.post('/refresh', async (req, res) => {
 			throw null
 	
 		await new Token({ body: token }).save()
+		//Look here, wtf is that
 		const user = await verifyRefreshToken(token)
 
 		const accessToken = generateAccessToken(user.id)
