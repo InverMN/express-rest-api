@@ -86,11 +86,10 @@ Authentication.post('/refresh', async (req, res) => {
 			throw null
 	
 		await new Token({ body: token }).save()
-		//Look here, wtf is that
-		const user = await verifyRefreshToken(token)
+		const userId = (await verifyRefreshToken(token)).id
 
-		const accessToken = generateAccessToken(user.id)
-		const refreshToken = generateRefreshToken(user.id)
+		const accessToken = generateAccessToken(userId)
+		const refreshToken = generateRefreshToken(userId)
 		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
 		res.json({ accessToken, refreshToken })
 	} catch {
