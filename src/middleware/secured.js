@@ -18,7 +18,7 @@ const secureLogged = async (req, res, next) => {
 		if(userId === null) throw null
 		
 		const user = await User.findById(userId)
-		if(!user) throw null
+		if(!user || !user.isVerified) throw null
 		
 		req.user = user
 		next()
