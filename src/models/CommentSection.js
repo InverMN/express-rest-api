@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import Popularity from './schemas/Popularity.js'
 const Schema = mongoose.Schema
 
 const common = {
@@ -11,14 +12,7 @@ const common = {
 		type: Date,
 		default: Date.now
 	},
-	reactions: {
-		positive: [mongoose.SchemaTypes.ObjectId],
-		negative: [mongoose.SchemaTypes.ObjectId],
-		sum: {
-			type: Number,
-			default: 0
-		}
-	},
+	popularity: Popularity,
 	body: {
 		type: String,
 		required: true
