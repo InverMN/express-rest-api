@@ -9,4 +9,4 @@ const data = {
 	}
 }
 
-export default new Schema(data)
+export const Author = new Schema(data)

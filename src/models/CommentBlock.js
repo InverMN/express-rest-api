@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
-import Popularity from './common/Popularity.js'
-import Author from './common/Author.js'
+import { Popularity, Author } from './common/index.js'
 const Schema = mongoose.Schema
 
 const common = {

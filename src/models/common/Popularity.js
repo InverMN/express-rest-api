@@ -12,4 +12,4 @@ const data = {
 	}
 }
 
-export default new Schema(data)
+export const Popularity = new Schema(data)

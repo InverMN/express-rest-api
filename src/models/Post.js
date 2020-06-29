@@ -1,7 +1,5 @@
 import mongoose from 'mongoose'
-import Popularity from './common/Popularity.js'
-import Author from './common/Author.js'
-import Comments from './common/Comments.js'
+import { Popularity, Author, Comments } from './common/index.js'
 const Schema = mongoose.Schema
 
 const data = {
