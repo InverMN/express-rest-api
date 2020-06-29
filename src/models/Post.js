@@ -1,13 +1,10 @@
 import mongoose from 'mongoose'
 import Popularity from './common/Popularity.js'
+import Author from './common/Author.js'
 const Schema = mongoose.Schema
 
 const data = {
-	author: String,
-	owner: {
-		type: 'ObjectId',
-		ref: 'User'
-	},
+	author: Author,
 	createdAt: { 
 		type: Date,
 		default: Date.now
