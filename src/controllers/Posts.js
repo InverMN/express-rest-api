@@ -13,11 +13,14 @@ Posts.get('/posts', async (_, res) => {
 Posts.post('/posts', Secure.USER, async (req, res) => {
 	try {
 		const { title, body } = req.body
+		const user = req.user
 		const data = {
 			title,
 			body,
-			owner: req.user._id, 
-			author: req.user.username
+			author: {
+				username: user.username,
+				id: user._id
+			}
 		}
 
 		const post = new Post(data) 
@@ -41,7 +44,7 @@ Posts.get('/posts/:id', async (req, res) => {
 Posts.delete('/posts/:id', Secure.OWNER, async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id)
-		if(!req.verifyOwnership('asd')) throw null
+		if(!req.verifyOwnership(post.author.id)) throw null
 		await post.remove()
 		res.send(post)
 	} catch (error) {
