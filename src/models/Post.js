@@ -21,7 +21,7 @@ const data = {
 	},
 	comments: {
 		type: 'ObjectId',
-		ref: 'CommentSection'
+		ref: 'CommentBlock'
 	},
 }
 
