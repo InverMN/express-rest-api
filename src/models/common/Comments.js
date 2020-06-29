@@ -12,4 +12,4 @@ const data = {
 	}
 }
 
-export const Comments = new Schema(data)
+export const Comments = new Schema(data, { _id : false })

@@ -12,4 +12,4 @@ const data = {
 	}
 }
 
-export const Popularity = new Schema(data)
+export const Popularity = new Schema(data, { _id : false })
