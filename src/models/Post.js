@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Popularity from './schemas/Popularity.js'
+import Popularity from './common/Popularity.js'
 const Schema = mongoose.Schema
 
 const data = {
