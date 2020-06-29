@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
-const basicData = {
+const data = {
 	author: String,
 	owner: {
 		type: 'ObjectId',
@@ -22,31 +22,16 @@ const basicData = {
 	body: {
 		type: String,
 		required: true
-	}
-}
-
-
-const subcommentData = {
-	...basicData
-}
-
-const subcomment = new Schema(subcommentData)
-
-const commentData = {
-	...basicData,
-	subcomments: [subcomment]
-}
-
-const comment = new Schema(commentData)
-
-const data = {
-	...basicData,
+	},
 	title: {
 		type: String,
 		maxlength: 50,
 		required: true
 	},
-	comments: [comment]
+	comments: {
+		type: 'ObjectId',
+		ref: 'CommentSection'
+	},
 }
 
 export const Post = mongoose.model('Post', new Schema(data))
