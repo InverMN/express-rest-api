@@ -39,9 +39,9 @@ const init = async document => {
 	commentBlock.save()
 }
 
-schema.pre('save', function(next) {
+schema.pre('save', async function(next) {
 	if(this.isNew)
-		init(this)
+		await init(this)
 	next()
 })
 
