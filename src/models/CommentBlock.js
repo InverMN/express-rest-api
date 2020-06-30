@@ -29,6 +29,6 @@ const commentData = {
 const comment = new Schema(commentData)
 
 //Watch out for an error
-const commentSectionData = [comment]
+const commentBlockData = { data: [comment]}
 
-export const CommentBlock = mongoose.model('CommentSection', new Schema(commentSectionData))
+export const CommentBlock = mongoose.model('CommentBlock', new Schema(commentBlockData))
