@@ -28,7 +28,6 @@ const commentData = {
 
 const comment = new Schema(commentData)
 
-//Watch out for an error
 const commentBlockData = { data: [comment]}
 
 export const CommentBlock = mongoose.model('CommentBlock', new Schema(commentBlockData))
