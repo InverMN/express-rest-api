@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const data = {
-	comments: {
+	commentBlock: {
 		type: 'ObjectId',
 		ref: 'CommentBlock'
 	},
