@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { Popularity, Author, Comments } from './common/index.js'
+import { Feedback, CommentBlock } from './index.js'
 const Schema = mongoose.Schema
 
 const data = {
@@ -21,4 +22,27 @@ const data = {
 	comments: Comments
 }
 
-export const Post = mongoose.model('Post', new Schema(data))
+const schema = new Schema(data)
+
+const init = async document => {
+	const feedback = await new Feedback()
+	document.popularity = {
+		feedback: feedback._id, 
+		sum: 0
+	}
+	feedback.save()
+
+	const commentBlock = await new CommentBlock()
+	document.comments =  {
+		commentBlock:	commentBlock._id
+	}
+	commentBlock.save()
+}
+
+schema.pre('save', function(next) {
+	if(this.isNew)
+		init(this)
+	next()
+})
+
+export const Post = mongoose.model('Post', schema)
