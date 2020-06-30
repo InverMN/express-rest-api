@@ -14,11 +14,6 @@ const data = {
 		type: String,
 		required: true
 	},
-	title: {
-		type: String,
-		maxlength: 50,
-		required: true
-	},
 	replies: [{
 		type: 'ObjectId',
 		ref: 'Comment'
@@ -42,4 +37,4 @@ schema.pre('save', async function(next) {
 	next()
 })
 
-export const Post = mongoose.model('Post', schema)
+export const Comment = mongoose.model('Comment', schema)

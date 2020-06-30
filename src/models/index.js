@@ -1,5 +1,5 @@
 export * from './User.js'
 export * from './Token.js'
 export * from './Post.js'
-export * from './CommentBlock.js'
 export * from './Feedback.js'
+export * from './Comment.js'
