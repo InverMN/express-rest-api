@@ -1,6 +1,6 @@
 import express from 'express'
 import { Secure } from '../middleware/index.js'
-import parse from '../services/errorParser.js'
+import  { parse } from '../services/index.js'
 import { Post } from '../models/index.js'
 import { update, appendUserReaction } from './common/index.js'
 

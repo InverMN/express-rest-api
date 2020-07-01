@@ -76,7 +76,7 @@ export function parseCustomError(message) {
 }
 
 //All merged together to one main full-functional function
-export default function(error) {
+export function parse(error) {
 	let errorDetails = {}
 
 	if(isNativeMongoError(error)) 

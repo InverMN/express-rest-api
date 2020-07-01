@@ -1,4 +1,4 @@
-import sanitize from '../../services/sanitize.js'
+import { sanitize } from '../../services/index.js'
 
 export function update(document, data, properties) {
 	properties.forEach(property => {

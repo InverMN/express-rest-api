@@ -1,9 +1,6 @@
 import express from 'express'
-import { hashPassword }  from '../services/password.js'
-import { generateAccessToken,  generateRefreshToken, verifyRefreshToken, verifyEmailConfirmationToken} from '../services/jwt.js'
-import { sendConfirmationEmail } from '../services/emailVerification.js'
+import { hashPassword, generateAccessToken,  generateRefreshToken, verifyRefreshToken, verifyEmailConfirmationToken, sendConfirmationEmail, parse }  from '../services/index.js'
 import  { User, Token } from '../models/index.js'
-import parse from '../services/errorParser.js'
 
 export const Authentication = new express.Router()
 

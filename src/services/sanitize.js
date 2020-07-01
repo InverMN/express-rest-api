@@ -5,6 +5,6 @@ const { JSDOM } = jsdom
 const { window } = new JSDOM('')
 const DOMPurity = createDOMPurify(window)
 
-export default function(dirty) {
+export function sanitize(dirty) {
 	return DOMPurity.sanitize(dirty)
 }
