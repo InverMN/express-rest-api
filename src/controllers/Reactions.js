@@ -62,7 +62,7 @@ Reactions.post('/unlike/:id', Secure.USER, async (req, res) => {
 })
 
 async function like(document, user) {
-	if(user.id !== document.author.id) {
+	if(user.id.toString() !== document.author.id.toString()) {
 		const feedback = await Feedback.findById(document.popularity.feedback)
 		if(!feedback.positive.includes(user._id)) {
 			feedback.positive.push(user._id)
@@ -74,7 +74,7 @@ async function like(document, user) {
 }
 
 async function dislike(document, user) {
-	if(user.id !== document.author.id) {
+	if(user.id.toString() !== document.author.id.toString()) {
 		const feedback = await Feedback.findById(document.popularity.feedback)
 		if(!feedback.negative.includes(user._id)) {
 			feedback.negative.push(user._id)
@@ -86,7 +86,7 @@ async function dislike(document, user) {
 }
 
 async function unlike(document, user) {
-	if(user.id !== document.author.id) {
+	if(user.id.toString() !== document.author.id.toString()) {
 		const feedback = await Feedback.findById(document.popularity.feedback)
 
 		if(feedback.positive.includes(user._id))
