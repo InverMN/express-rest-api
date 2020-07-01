@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { Popularity, Author } from './common/index.js'
-import { Feedback } from './index.js'
+import { Feedback, Post } from './index.js'
 const Schema = mongoose.Schema
 
 const data = {
@@ -34,6 +34,15 @@ const init = async document => {
 schema.pre('save', async function(next) {
 	if(this.isNew)
 		await init(this)
+	next()
+})
+
+schema.pre('remove', async function(next) {
+	const parent = await Post.findOne({ replies: { $in: [this._id] } }) || await Comment.findOne({ replies: { $in: [this._id] } })
+
+	parent.replies = parent.replies.filter(replyRef => replyRef.toString() !== this.id.toString())
+	await parent.save()
+
 	next()
 })
 
