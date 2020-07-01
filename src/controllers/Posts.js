@@ -2,11 +2,16 @@ import express from 'express'
 import Secure from '../middleware/secured.js'
 import parse from '../services/errorParser.js'
 import { Post } from '../models/index.js'
+import { appendUserReaction } from '../services/documentModifiers.js'
 
 export const Posts = new express.Router()
 
-Posts.get('/posts', async (_, res) => {
-	const posts = await Post.find()
+Posts.get('/posts', Secure.CHECK, async (req, res) => {
+	let posts = await Post.find()
+
+	if(req.user !== undefined)
+		posts = await appendUserReaction(posts, req.user._id)
+
 	res.send(posts)
 })
 
@@ -32,9 +37,13 @@ Posts.post('/posts', Secure.USER, async (req, res) => {
 	}
 })
 
-Posts.get('/posts/:id', async (req, res) => {
+Posts.get('/posts/:id', Secure.CHECK, async (req, res) => {
 	try {
-		const post = await Post.findById(req.params.id) 
+		let post = await Post.findById(req.params.id) 
+
+		if(req.user !== undefined)
+			post = await appendUserReaction(post, req.user._id)
+
 		res.send(post)
 	} catch (error) {
 		res.status(404)
