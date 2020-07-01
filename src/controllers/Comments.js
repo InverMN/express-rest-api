@@ -1,14 +1,18 @@
 import express from 'express'
 import Secure from '../middleware/secured.js'
 import { Comment, Post } from '../models/index.js'
+import { appendUserReaction } from '../services/documentModifiers.js'
 
 export const Comments = new express.Router()
 
-Comments.get('/comments/:id', async (req, res) => {
+Comments.get('/comments/:id', Secure.CHECK, async (req, res) => {
 	try {
 		const targetId = req.params.id
 
-		const comment = await Comment.findById(targetId)
+		let comment = await Comment.findById(targetId)
+
+		if(req.user !== undefined)
+			comment = await appendUserReaction(comment, req.user._id)
 
 		res.send(comment)
 	} catch(error) {
