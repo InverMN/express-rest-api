@@ -45,6 +45,11 @@ schema.pre('remove', async function(next) {
 		await parent.save()
 	}
 
+	this._doc.replies.forEach(async replyRef => {
+		const comment = await Comment.findById(replyRef)
+		comment.remove()
+	})
+
 	next()
 })
 
