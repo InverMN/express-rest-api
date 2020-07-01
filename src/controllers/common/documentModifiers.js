@@ -1,4 +1,4 @@
-import { Feedback } from '../../models/Feedback.js'
+import { Feedback } from '../../models/index.js'
 
 export async function appendUserReaction(input, userId) {
 	if(input instanceof Array) 
