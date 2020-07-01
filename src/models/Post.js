@@ -48,6 +48,8 @@ schema.pre('remove', async function(next) {
 		comment.remove()
 	})
 
+	Feedback.findById(this._doc.popularity.feedback).then(it => it.remove())
+
 	next()
 })
 
