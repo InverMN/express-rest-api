@@ -72,6 +72,7 @@ Comments.patch('/comments/:id', Secure.OWNER, async (req, res) => {
 		const comment = await Comment.findById(targetId)
 		if(!req.verifyOwnership(comment.author.id)) throw null
 		comment.body = body
+		comment.editedAt = Date.now()
 		comment.save()
 
 		res.send(comment)

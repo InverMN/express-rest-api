@@ -77,6 +77,7 @@ Posts.patch('/posts/:id', Secure.OWNER, async (req, res) => {
 
 		update(post, req.body, ['title', 'body'])
 		
+		post.editedAt = Date.now()
 		await post.save()
 		res.send(post)
 	} catch (error) {
