@@ -1,6 +1,6 @@
 import express from 'express'
 import { User } from '../models/index.js'
-import Secure from '../middleware/secured.js'
+import { Secure } from '../middleware/index.js'
 import { hashPassword } from '../services/password.js'
 
 export const Users = new express.Router()

@@ -87,7 +87,7 @@ const secureModerator = async (req, res, next) => {
 	}
 }
 
-export default {
+export const Secure = {
 	CHECK: secureCheck,
 	USER: secureLogged,
 	OWNER: secureOwner,

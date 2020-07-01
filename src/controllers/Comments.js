@@ -1,5 +1,5 @@
 import express from 'express'
-import Secure from '../middleware/secured.js'
+import { Secure } from '../middleware/index.js'
 import { Comment, Post } from '../models/index.js'
 import { update, appendUserReaction } from './common/index.js'
 

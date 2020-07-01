@@ -1,5 +1,5 @@
 import express from 'express'
-import Secure from '../middleware/secured.js'
+import { Secure } from '../middleware/index.js'
 import { Post, Feedback, Comment } from '../models/index.js'
 
 export const Reactions = new express.Router()
