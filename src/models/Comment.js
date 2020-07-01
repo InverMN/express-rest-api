@@ -40,8 +40,10 @@ schema.pre('save', async function(next) {
 schema.pre('remove', async function(next) {
 	const parent = await Post.findOne({ replies: { $in: [this._id] } }) || await Comment.findOne({ replies: { $in: [this._id] } })
 
-	parent.replies = parent.replies.filter(replyRef => replyRef.toString() !== this.id.toString())
-	await parent.save()
+	if(parent !== null) {
+		parent.replies = parent.replies.filter(replyRef => replyRef.toString() !== this.id.toString())
+		await parent.save()
+	}
 
 	next()
 })
