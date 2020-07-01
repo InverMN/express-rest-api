@@ -3,6 +3,7 @@ import Secure from '../middleware/secured.js'
 import parse from '../services/errorParser.js'
 import { Post } from '../models/index.js'
 import { appendUserReaction } from '../services/documentModifiers.js'
+import { update } from './common/index.js'
 
 export const Posts = new express.Router()
 
@@ -60,13 +61,6 @@ Posts.delete('/posts/:id', Secure.OWNER, async (req, res) => {
 		res.sendStatus(401)
 	}
 })
-
-function update(document, data, properties) {
-	properties.forEach(property => {
-		if(property in data) 
-			document[property] = data[property]
-	})
-}
 
 Posts.patch('/posts/:id', Secure.OWNER, async (req, res) => {
 	try {

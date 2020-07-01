@@ -2,6 +2,7 @@ import express from 'express'
 import Secure from '../middleware/secured.js'
 import { Comment, Post } from '../models/index.js'
 import { appendUserReaction } from '../services/documentModifiers.js'
+import { update } from './common/index.js'
 
 export const Comments = new express.Router()
 
@@ -74,11 +75,10 @@ Comments.delete('/comments/:id', Secure.OWNER, async (req, res) => {
 Comments.patch('/comments/:id', Secure.OWNER, async (req, res) => {
 	try {
 		const targetId = req.params.id
-		const { body } = req.body
 
 		const comment = await Comment.findById(targetId)
 		if(!req.verifyOwnership(comment.author.id)) throw null
-		comment.body = body
+		update(comment, req.body, ['body'])
 		comment.editedAt = Date.now()
 		comment.save()
 
