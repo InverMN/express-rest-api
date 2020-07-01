@@ -1,8 +1,7 @@
 import express from 'express'
 import Secure from '../middleware/secured.js'
 import { Comment, Post } from '../models/index.js'
-import { appendUserReaction } from '../services/documentModifiers.js'
-import { update } from './common/index.js'
+import { update, appendUserReaction } from './common/index.js'
 
 export const Comments = new express.Router()
 

@@ -2,8 +2,7 @@ import express from 'express'
 import Secure from '../middleware/secured.js'
 import parse from '../services/errorParser.js'
 import { Post } from '../models/index.js'
-import { appendUserReaction } from '../services/documentModifiers.js'
-import { update } from './common/index.js'
+import { update, appendUserReaction } from './common/index.js'
 
 export const Posts = new express.Router()
 
