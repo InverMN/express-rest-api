@@ -9,6 +9,10 @@ const data = {
 		type: Date,
 		default: Date.now
 	},
+	editedAt: { 
+		type: Date,
+		default: Date.now
+	},
 	popularity: Popularity,
 	body: {
 		type: String,
