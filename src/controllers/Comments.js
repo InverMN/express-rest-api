@@ -41,12 +41,13 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 
 		if(target.collection.name === 'comments') {
 			let superParentComment = await Comment.findOne({ replies: { $in: [target._id] } })
-			if(superParentComment !== null)
+			if(superParentComment !== null){
 				target = superParentComment
+				comment.replies = undefined
+			}
 		}
 
 		target.replies.push(comment._id)
-		comment.replies = undefined
 		comment.save()
 		target.save()
 
