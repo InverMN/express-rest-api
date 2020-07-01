@@ -45,6 +45,7 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 		}
 
 		target.replies.push(comment._id)
+		comment.replies = undefined
 		comment.save()
 		target.save()
 
