@@ -12,6 +12,17 @@ const extractUserId = async request => {
 	}
 }
 
+const secureCheck = async (req, res, next) => {
+	const userId = await extractUserId(req)
+	if(userId !== null) {
+		const user = await User.findById(userId)
+		if(!user || !user.isVerified) throw null
+		req.user = user
+	}
+	
+	next()
+}
+
 const secureLogged = async (req, res, next) => {
 	try {
 		const userId = await extractUserId(req)
@@ -77,6 +88,7 @@ const secureModerator = async (req, res, next) => {
 }
 
 export default {
+	CHECK: secureCheck,
 	USER: secureLogged,
 	OWNER: secureOwner,
 	MODERATOR: secureModerator
