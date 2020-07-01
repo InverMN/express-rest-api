@@ -38,7 +38,6 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 
 		let target = await Post.findById(targetId) || await Comment.findById(targetId)
 
-		console.log(target.collection.name === 'comments')
 		if(target.collection.name === 'comments') {
 			let superParentComment = await Comment.findOne({ replies: { $in: [target._id] } })
 			if(superParentComment !== null)
