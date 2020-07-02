@@ -20,7 +20,13 @@ export const isDuplicationError = error => error.code === 11000
 export const isCustomError = error => {
 	if(typeof error === 'string') {
 		error = error.trim()
-		return error.startsWith('validation') || error.startsWith('auth') || error.startsWith('not found')
+		return error.startsWith('unauthenticated') 
+			|| error.startsWith('forbidden') 
+			|| error.startsWith('missing')
+			|| error.startsWith('short')
+			|| error.startsWith('long')
+			|| error.startsWith('incorrect')
+			|| error.startsWith('not') // not found
 	} else
 		return false
 }
@@ -67,31 +73,71 @@ export function parseInvalidationError({ message }) {
 
 export function parseCustomError(message) {
 	const words = message.trim().split(' ')
-	const errorDetails = {}
-	
-	if(words[0].startsWith('validation')) {
-		errorDetails.type = 'data validation'
-		errorDetails.source = words[2]
-		errorDetails.cause = words[1]
-		errorDetails.code = 400
-	}
-	else if(words[0].startsWith('auth')) {
-		errorDetails.type = 'authentication'
-		errorDetails.cause = 'unauthorized'
-		errorDetails.code = 401
-		//if starts with "not found" 
-	} else if(words[0].startsWith('not')) {
-		errorDetails.type = 'not found'
-		errorDetails.source = words[2]
-		errorDetails.code = 404
-	} else {
-		errorDetails.type = 'unknown'
-		errorDetails.code = 500
-	}
+	let errorDetails
 
-	if(words.includes('excepted')){
-		errorDetails.excepted = words[4]
-		if(!isNaN(parseInt(errorDetails.excepted))) errorDetails.excepted = parseInt(errorDetails.excepted)
+	switch(words[0]) {
+		case 'unauthenticated':
+			errorDetails = {
+				type: 'authorization',
+				cause: 'unauthenticated',
+				code: 401
+			}
+			break
+		case 'forbidden':
+			errorDetails = {
+				type: 'authorization',
+				cause: 'forbidden',
+				excepted: words[2],
+				code: 401
+			}
+			break
+		case 'missing':
+			errorDetails = {
+				type: 'data validation',
+				source: words[1],
+				cause: 'missing',
+				code: 400
+			}
+			break
+		case 'short':
+			errorDetails = {
+				type: 'data validation',
+				source: words[1],
+				cause: 'short',
+				excepted: words[3],
+				code: 400
+			}
+			break
+		case 'long':
+			errorDetails = {
+				type: 'data validation',
+				source: words[1],
+				cause: 'long',
+				excepted: words[3],
+				code: 400
+			}
+			break
+		case 'incorrect':
+			errorDetails = {
+				type: 'authentication',
+				source: words[1],
+				cause: 'incorrect',
+				code: 400
+			}
+			break
+		case 'not':
+			errorDetails = {
+				type: 'not found',
+				source: words[2],
+				code: 404
+			}
+			break
+		default: 
+			errorDetails = {
+				type: 'unknown',
+				code: 500
+			}
+			console.error('Unhandled custom error:', message)
 	}
 	
 	return errorDetails
