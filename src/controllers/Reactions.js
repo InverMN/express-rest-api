@@ -8,6 +8,8 @@ Reactions.get('/feedbacks/:id', async (req, res) => {
 	const targetId = req.params.id
 
 	const feedback = await Feedback.findById(targetId)
+	if(feedback === null)
+		throw 'not found feedback'
 
 	res.send(feedback)
 })
@@ -16,6 +18,8 @@ Reactions.post('/like/:id', Secure.USER, async (req, res) => {
 	const targetId = req.params.id
 
 	const target = await Post.findById(targetId) || await Comment.findById(targetId)
+	if(target === null)
+		throw 'not found post/comment'
 
 	await unlike(target, req.user)
 	like(target, req.user)
@@ -27,6 +31,8 @@ Reactions.post('/dislike/:id', Secure.USER, async (req, res) => {
 	const targetId = req.params.id
 
 	const target = await Post.findById(targetId) || await Comment.findById(targetId)
+	if(target === null)
+		throw 'not found post/comment'
 
 	await unlike(target, req.user)
 	dislike(target, req.user)
@@ -38,6 +44,8 @@ Reactions.post('/unlike/:id', Secure.USER, async (req, res) => {
 	const targetId = req.params.id
 
 	const target = await Post.findById(targetId) || await Comment.findById(targetId)
+	if(target === null)
+		throw 'not found post/comment'
 
 	unlike(target, req.user)
 
