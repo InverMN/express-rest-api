@@ -1,9 +1,13 @@
 export function parseError(error) {
 	let errorDetails = {}
 
+	console.log(error)
+
 	if(isMongooseError(error))
 		if(isDuplicationError(error))
 			errorDetails = parseDuplicationError(error)
+		else if(isCastError(error))
+			errorDetails = parseCastError()
 		else
 			errorDetails = parseInvalidationError(error)
 	else if(isCustomError(error))
@@ -17,6 +21,7 @@ export function parseError(error) {
 //Checkers for the error type, which help decide what parser to use
 export const isMongooseError = error => typeof error === 'object' && error.message !== undefined
 export const isDuplicationError = error => error.code === 11000
+export const isCastError = error => error.kind === 'ObjectId'
 export const isCustomError = error => {
 	if(typeof error === 'string') {
 		error = error.trim()
@@ -37,6 +42,13 @@ export const parseDuplicationError = ({ message }) => ({
 	type: 'data validation',
 	source: cutWord(message.split(' ')[7], 0, 2),
 	cause: 'duplicate',
+	code: 400
+})
+
+export const parseCastError = () => ({ 
+	type: 'data validation',
+	source: 'id', 
+	cause: 'incorrect',
 	code: 400
 })
 
