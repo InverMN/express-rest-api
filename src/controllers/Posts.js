@@ -1,10 +1,9 @@
-import express from 'express'
 import { Secure } from '../middleware/index.js'
 import  { parse } from '../services/index.js'
 import { Post } from '../models/index.js'
-import { update, appendUserReaction } from './common/index.js'
+import { update, appendUserReaction, Controller } from './common/index.js'
 
-export const Posts = new express.Router()
+export const Posts = new Controller()
 
 Posts.get('/posts', Secure.CHECK, async (req, res) => {
 	let posts = await Post.find()
@@ -16,65 +15,47 @@ Posts.get('/posts', Secure.CHECK, async (req, res) => {
 })
 
 Posts.post('/posts', Secure.USER, async (req, res) => {
-	try {
-		const { title, body } = req.body
-		const user = req.user
-		const data = {
-			title,
-			body,
-			author: {
-				username: user.username,
-				id: user._id
-			}
+	const { title, body } = req.body
+	const user = req.user
+	const data = {
+		title,
+		body,
+		author: {
+			username: user.username,
+			id: user._id
 		}
-
-		const post = new Post(data) 
-		await post.save()
-		res.send(post)
-	} catch (error) {
-		res.status(400)
-		res.send(parse(error))
 	}
+
+	const post = new Post(data) 
+	await post.save()
+	res.send(post)
 })
 
 Posts.get('/posts/:id', Secure.CHECK, async (req, res) => {
-	try {
-		let post = await Post.findById(req.params.id) 
+	let post = await Post.findById(req.params.id) 
 
-		if(req.user !== undefined)
-			post = await appendUserReaction(post, req.user._id)
+	if(req.user !== undefined)
+		post = await appendUserReaction(post, req.user._id)
 
-		res.send(post)
-	} catch (error) {
-		res.status(404)
-	}
+	res.send(post)
 })
 
 Posts.delete('/posts/:id', Secure.OWNER, async (req, res) => {
-	try {
-		const post = await Post.findById(req.params.id)
-		if(!req.verifyOwnership(post.author.id)) throw null
-		await post.remove()
-		res.send(post)
-	} catch (error) {
-		res.sendStatus(401)
-	}
+	const post = await Post.findById(req.params.id)
+	if(!req.verifyOwnership(post.author.id)) throw null
+	await post.remove()
+	res.send(post)
 })
 
 Posts.patch('/posts/:id', Secure.OWNER, async (req, res) => {
-	try {
-		const id = req.params.id
-		if(!(await Post.exists({ _id: id }))) throw null
-		const post = await Post.findById(id)
-		if(!req.verifyOwnership(post._id)) throw null
+	const id = req.params.id
+	if(!(await Post.exists({ _id: id }))) throw null
+	const post = await Post.findById(id)
+	if(!req.verifyOwnership(post._id)) throw null
 
-		update(post, req.body, ['title', 'body'])
-		
-		post.editedAt = Date.now()
-		await post.save()
-		res.send(post)
-	} catch (error) {
-		console.log(error)
-		res.sendStatus(401)
-	}
+	update(post, req.body, ['title', 'body'])
+	
+	post.editedAt = Date.now()
+	await post.save()
+	res.send(post)
 })

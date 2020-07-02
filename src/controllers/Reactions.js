@@ -1,64 +1,47 @@
-import express from 'express'
 import { Secure } from '../middleware/index.js'
 import { Post, Feedback, Comment } from '../models/index.js'
+import { Controller } from './common/index.js'
 
-export const Reactions = new express.Router()
+export const Reactions = new Controller()
 
 Reactions.get('/feedbacks/:id', async (req, res) => {
-	try {
-		const targetId = req.params.id
+	const targetId = req.params.id
 
-		const feedback = await Feedback.findById(targetId)
+	const feedback = await Feedback.findById(targetId)
 
-		res.send(feedback)
-	} catch (error) {
-		console.log(error)
-		res.send(error)
-	}
+	res.send(feedback)
 })
 
 Reactions.post('/like/:id', Secure.USER, async (req, res) => {
-	try {
-		const targetId = req.params.id
+	const targetId = req.params.id
 
-		const target = await Post.findById(targetId) || await Comment.findById(targetId)
+	const target = await Post.findById(targetId) || await Comment.findById(targetId)
 
-		await unlike(target, req.user)
-		like(target, req.user)
+	await unlike(target, req.user)
+	like(target, req.user)
 
-		res.sendStatus(200)
-	} catch (error) {
-		res.send(error)
-	}
+	res.sendStatus(200)
 })
 
 Reactions.post('/dislike/:id', Secure.USER, async (req, res) => {
-	try {
-		const targetId = req.params.id
+	const targetId = req.params.id
 
-		const target = await Post.findById(targetId) || await Comment.findById(targetId)
+	const target = await Post.findById(targetId) || await Comment.findById(targetId)
 
-		await unlike(target, req.user)
-		dislike(target, req.user)
+	await unlike(target, req.user)
+	dislike(target, req.user)
 
-		res.sendStatus(200)
-	} catch (error) {
-		res.send(error)
-	}
+	res.sendStatus(200)
 })
 
 Reactions.post('/unlike/:id', Secure.USER, async (req, res) => {
-	try {
-		const targetId = req.params.id
+	const targetId = req.params.id
 
-		const target = await Post.findById(targetId) || await Comment.findById(targetId)
+	const target = await Post.findById(targetId) || await Comment.findById(targetId)
 
-		unlike(target, req.user)
+	unlike(target, req.user)
 
-		res.sendStatus(200)
-	} catch (error) {
-		res.send(error)
-	}
+	res.sendStatus(200)
 })
 
 async function like(document, user) {

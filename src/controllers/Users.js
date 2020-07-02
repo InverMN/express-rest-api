@@ -1,9 +1,9 @@
-import express from 'express'
 import { User } from '../models/index.js'
 import { Secure } from '../middleware/index.js'
 import { hashPassword } from '../services/password.js'
+import { Controller } from './common/index.js'
 
-export const Users = new express.Router()
+export const Users = new Controller()
 
 Users.get('/users', Secure.MODERATOR, async (req, res) => {
 	const users = await User.find()
@@ -32,32 +32,22 @@ Users.get('/users/:id', async (req, res) => {
 })
 
 Users.delete('/users/:id', async (req, res) => {
-	try {
-		await User.deleteOne({ _id: req.params.id })
-    res.status(204).send()
-	} catch {
-		res.status(404)
-		res.send({ error: 'User doesn\'t exist!' })
-	}
+	await User.deleteOne({ _id: req.params.id })
+	res.status(204).send()
 })	
 
 Users.patch('/users/:id', Secure.OWNER, async (req, res) => {
-	try {
-		const user = await User.findOne({ _id: req.params.id })
+	const user = await User.findOne({ _id: req.params.id })
 
-		if(req.body.username)
-			user.username = req.body.username
+	if(req.body.username)
+		user.username = req.body.username
 
-		if(req.body.password)
-			user.hashedPassword = hashPassword(req.body.password)
+	if(req.body.password)
+		user.hashedPassword = hashPassword(req.body.password)
 
-		if(req.body.email)
-			user.email = req.body.email
+	if(req.body.email)
+		user.email = req.body.email
 
-		await user.save()
-		res.send(user)
-	} catch {
-		res.status(404)
-		res.send({ error: 'User does not exist' })
-	}
+	await user.save()
+	res.send(user)
 })
