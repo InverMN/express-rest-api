@@ -31,6 +31,9 @@ Authentication.post('/register', async (req, res) => {
 
 Authentication.get('/confirm/:token', async (req, res) => {
 	const userId = (await verifyEmailConfirmationToken(req.params.token)).id
+	// if(userId === undefined)
+	// 	throw 'unauthenticated'
+
 	const user = await User.findOne({ _id: userId })
 
 	user.isVerified = true
@@ -66,7 +69,7 @@ Authentication.post('/refresh', async (req, res) => {
 	const token = req.cookies.REFRESH_TOKEN
 
 	if(!token || await Token.exists({ body: token }))
-		throw null
+		throw 'unauthenticated'
 
 	await new Token({ body: token }).save()
 	const userId = (await verifyRefreshToken(token)).id
