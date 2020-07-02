@@ -1,5 +1,4 @@
 export * from './emailVerification.js'
-export * from './errorParser.js'
 export * from './jwt.js'
 export * from './password.js'
 export * from './sanitize.js'

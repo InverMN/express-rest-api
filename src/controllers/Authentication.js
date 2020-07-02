@@ -1,4 +1,4 @@
-import { hashPassword, generateAccessToken,  generateRefreshToken, verifyRefreshToken, verifyEmailConfirmationToken, sendConfirmationEmail, parse }  from '../services/index.js'
+import { hashPassword, generateAccessToken,  generateRefreshToken, verifyRefreshToken, verifyEmailConfirmationToken, sendConfirmationEmail }  from '../services/index.js'
 import  { User, Token } from '../models/index.js'
 import { Controller } from './common/index.js'
 
