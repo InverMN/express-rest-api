@@ -9,6 +9,9 @@ Comments.get('/comments/:id', Secure.CHECK, async (req, res) => {
 
 	let comment = await Comment.findById(targetId)
 
+	if(comment === null)
+		throw 'not found comment'
+
 	if(req.user !== undefined)
 		comment = await appendUserReaction(comment, req.user._id)
 
@@ -31,6 +34,9 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 
 	let target = await Post.findById(targetId) || await Comment.findById(targetId)
 
+	if(target === null)
+		throw 'not found post/comment'
+
 	if(target.collection.name === 'comments') {
 		let superParentComment = await Comment.findOne({ replies: { $in: [target._id] } })
 		if(superParentComment !== null){
@@ -50,7 +56,8 @@ Comments.delete('/comments/:id', Secure.OWNER, async (req, res) => {
 	const targetId = req.params.id
 
 	const comment = await Comment.findById(targetId)
-	if(!req.verifyOwnership(comment.author.id)) throw null
+
+	req.verifyOwnership(comment.author.id)
 	comment.remove()
 
 	res.send(comment)
@@ -60,7 +67,10 @@ Comments.patch('/comments/:id', Secure.OWNER, async (req, res) => {
 	const targetId = req.params.id
 
 	const comment = await Comment.findById(targetId)
-	if(!req.verifyOwnership(comment.author.id)) throw null
+	if(comment === null)
+		throw 'not found comment'
+	
+	req.verifyOwnership(comment.author.id)
 	update(comment, req.body, ['body'])
 	comment.editedAt = Date.now()
 	comment.save()
