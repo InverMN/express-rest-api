@@ -1,5 +1,6 @@
 import { verifyAccessToken } from '../services/jwt.js'
 import { User } from '../models/index.js'
+import { handleError } from '../controllers/common/index.js'
 
 const extractUserId = async request => {
 	try {
@@ -26,15 +27,20 @@ const secureCheck = async (req, res, next) => {
 const secureLogged = async (req, res, next) => {
 	try {
 		const userId = await extractUserId(req)
-		if(userId === null) throw null
+		if(userId === null) 
+			throw 'unauthenticated'
 		
 		const user = await User.findById(userId)
-		if(!user || !user.isVerified) throw null
+		if(!user)
+			throw 'not found user'
+
+		if(!user.isVerified)
+			throw 'forbidden excepted verified'
 		
 		req.user = user
 		next()
-	} catch {
-		return res.sendStatus(401)
+	} catch(error) {
+		handleError(res, error)
 	}
 }
 
@@ -44,46 +50,46 @@ function verifyOwnership(ownerRelation) {
 	} else if(ownerRelation === undefined) {
 		this.response.sendStatus(500)
 		throw 'Response body does not contain owner property'
-	}
-	else {
-		this.response.sendStatus(401)
-		this.response.send = () => {}
-		this.response.sendStatus = () => {}
-		return false
+	} else {
+		throw 'forbidden excepted owner'
 	}
 }
 
 const secureOwner = async (req, res, next) => {
 	try {
 		const userId = await extractUserId(req)
-		if(userId === null) throw null
+		if(userId === null) 
+			throw 'unauthenticated'
 
 		const user = await User.findOne({ _id: userId })
-		if(!user) throw null
+		if(!user) 
+			throw 'not found user'
 
 		req.user = user
 		req.response = res
 		req.verifyOwnership = verifyOwnership
 		next()
-	} catch {
-		return res.sendStatus(401)
+	} catch(error) {
+		handleError(res, error)
 	}
 }
 
 const secureModerator = async (req, res, next) => {
 	try {
 		const userId = await extractUserId(req)
-		if(userId === null) throw null
+		if(userId === null) 
+			throw 'unauthenticated'
 		
 		const user = await User.findOne({ _id: userId, isModerator: true })
 
 		if(user)
 			req.user = user
-		else throw null
+		else 
+			throw 'forbidden excepted moderator'
 
 		next()
-	} catch {
-		return res.sendStatus(401)
+	} catch(error) {
+		handleError(res, error)
 	}
 }
 
