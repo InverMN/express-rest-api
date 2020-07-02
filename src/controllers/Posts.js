@@ -32,6 +32,8 @@ Posts.post('/posts', Secure.USER, async (req, res) => {
 
 Posts.get('/posts/:id', Secure.CHECK, async (req, res) => {
 	let post = await Post.findById(req.params.id) 
+	if(post === null)
+		throw 'not found post'
 
 	if(req.user !== undefined)
 		post = await appendUserReaction(post, req.user._id)
@@ -41,16 +43,22 @@ Posts.get('/posts/:id', Secure.CHECK, async (req, res) => {
 
 Posts.delete('/posts/:id', Secure.OWNER, async (req, res) => {
 	const post = await Post.findById(req.params.id)
-	if(!req.verifyOwnership(post.author.id)) throw null
+	if(post === null)
+		throw 'not found post'
+
+	req.verifyOwnership(post.author.id)
 	await post.remove()
 	res.send(post)
 })
 
 Posts.patch('/posts/:id', Secure.OWNER, async (req, res) => {
 	const id = req.params.id
-	if(!(await Post.exists({ _id: id }))) throw null
+
 	const post = await Post.findById(id)
-	if(!req.verifyOwnership(post._id)) throw null
+	if(post === null)
+		throw 'not found post'
+
+	req.verifyOwnership(post._id)
 
 	update(post, req.body, ['title', 'body'])
 	
