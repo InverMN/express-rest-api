@@ -10,9 +10,9 @@ export class Controller {
 	get(path, first, second) {
 		let callback = second === undefined ? first : second
 
-		let action = (req, res) => {
+		let action = async (req, res) => {
 			try {
-				callback(req, res)
+				await callback(req, res)
 			} catch (error) {
 				handleError(res, error)
 			}
@@ -24,9 +24,9 @@ export class Controller {
 	post(path, first, second) {
 		let callback = second === undefined ? first : second
 
-		let action = (req, res) => {
+		let action = async (req, res) => {
 			try {
-				callback(req, res)
+				await callback(req, res)
 			} catch (error) {
 				handleError(res, error)
 			}
@@ -38,9 +38,9 @@ export class Controller {
 	delete(path, first, second) {
 		let callback = second === undefined ? first : second
 
-		let action = (req, res) => {
+		let action = async (req, res) => {
 			try {
-				callback(req, res)
+				await callback(req, res)
 			} catch (error) {
 				handleError(res, error)
 			}
@@ -52,9 +52,9 @@ export class Controller {
 	patch(path, first, second) {
 		let callback = second === undefined ? first : second
 
-		let action = (req, res) => {
+		let action = async (req, res) => {
 			try {
-				callback(req, res)
+				await callback(req, res)
 			} catch (error) {
 				handleError(res, error)
 			}
