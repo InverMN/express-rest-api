@@ -116,7 +116,7 @@ export function parseCustomError(message) {
 				type: 'data validation',
 				source: words[1],
 				cause: 'short',
-				excepted: words[3],
+				excepted: parseInt(words[3]),
 				code: 400
 			}
 			break
@@ -125,7 +125,7 @@ export function parseCustomError(message) {
 				type: 'data validation',
 				source: words[1],
 				cause: 'long',
-				excepted: words[3],
+				excepted: parseInt(words[3]),
 				code: 400
 			}
 			break
