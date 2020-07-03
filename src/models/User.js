@@ -1,7 +1,5 @@
 import mongoose from 'mongoose'
 import { email } from '../patterns.js'
-import Avatar from 'avatar-builder'
-import fs from 'fs'
 const Schema = mongoose.Schema
 
 //Declare schema
