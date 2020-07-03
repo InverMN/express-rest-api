@@ -1,4 +1,4 @@
-import { hashPassword, generateAccessToken,  generateRefreshToken, verifyRefreshToken, verifyEmailConfirmationToken, sendConfirmationEmail }  from '../services/index.js'
+import { hashPassword, generateAccessToken,  generateRefreshToken, verifyRefreshToken, verifyEmailConfirmationToken, sendConfirmationEmail, createIdenticon }  from '../services/index.js'
 import  { User, Token } from '../models/index.js'
 import { Controller } from './common/index.js'
 
@@ -29,7 +29,7 @@ Authentication.post('/register', async (req, res) => {
 	await user.save()
 
 	sendConfirmationEmail(user._id, email)
-
+	createIdenticon(user.id)
 	createAndSendCredentials(user._id, res)
 })
 
