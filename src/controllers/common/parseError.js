@@ -100,7 +100,7 @@ export function parseCustomError(message) {
 				type: 'authorization',
 				cause: 'forbidden',
 				excepted: words[2],
-				code: 401
+				code: 403
 			}
 			break
 		case 'missing':
