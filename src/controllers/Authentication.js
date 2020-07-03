@@ -6,6 +6,13 @@ export const Authentication = new Controller()
 
 const day = 86400000
 
+function createAndSendCredentials(userId, response) {
+	const accessToken = generateAccessToken(userId)
+	const refreshToken = generateRefreshToken(userId)
+	response.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
+	response.json({ accessToken, refreshToken })
+}
+
 Authentication.post('/register', async (req, res) => {
 	const { username, email, password } = req.body
 
@@ -23,10 +30,7 @@ Authentication.post('/register', async (req, res) => {
 
 	sendConfirmationEmail(user._id, email)
 
-	const accessToken = generateAccessToken(user._id)
-	const refreshToken = generateRefreshToken(user._id)
-	res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
-	res.json({ accessToken, refreshToken })
+	createAndSendCredentials(user._id, res)
 })
 
 Authentication.get('/confirm/:token', async (req, res) => {
@@ -39,7 +43,7 @@ Authentication.get('/confirm/:token', async (req, res) => {
 	user.isVerified = true
 	await user.save()
 
-	res.sendStatus(200)
+	createAndSendCredentials(user._id, res)
 })
 
 Authentication.post('/login', async (req, res) => {
@@ -59,10 +63,7 @@ Authentication.post('/login', async (req, res) => {
 	if(user.hashedPassword !== hashPassword(password))
 		throw 'incorrect password'
 
-	const accessToken = generateAccessToken(user._id)
-	const refreshToken = generateRefreshToken(user._id)
-	res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
-	res.json({ accessToken, refreshToken })
+	createAndSendCredentials(user._id, res)
 })
 
 Authentication.post('/refresh', async (req, res) => {
@@ -74,10 +75,7 @@ Authentication.post('/refresh', async (req, res) => {
 	await new Token({ body: token }).save()
 	const userId = (await verifyRefreshToken(token)).id
 
-	const accessToken = generateAccessToken(userId)
-	const refreshToken = generateRefreshToken(userId)
-	res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
-	res.json({ accessToken, refreshToken })
+	createAndSendCredentials(userId, res)
 })
 
 Authentication.delete('/logout', async (req, res) => {
