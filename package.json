@@ -6,6 +6,7 @@
   "main": "app.js",
   "scripts": {
     "serve": "nodemon src/index.js",
+    "serveDev": "nodemon test/index.js",
     "test": "mocha --timeout 10000 --recursive"
   },
   "author": "Inver",

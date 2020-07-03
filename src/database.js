@@ -1,6 +1,4 @@
 import mongoose from 'mongoose'
-import mockgoose from 'mockgoose'
-const Mockgoose = mockgoose.Mockgoose
 
 const config = {
 	uris: 'mongodb://localhost:27017/blog',

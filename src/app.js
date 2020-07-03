@@ -9,7 +9,7 @@ export function run(method = 'production') {
 	let database
 
 	if(method === 'production') database = openDatabase() 
-	else if(method === 'tests') database = openTestDatabase()
+	else database = openTestDatabase()
 
 	database.once('open', () => {
 		dotenv.config()
