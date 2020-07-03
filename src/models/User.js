@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 import { email } from '../patterns.js'
+import Avatar from 'avatar-builder'
+import fs from 'fs'
 const Schema = mongoose.Schema
 
 //Declare schema
@@ -31,19 +33,10 @@ const data = {
 	isModerator: { 
 		type: Boolean,
 		default: false
-	},
-	avatar: {
-		type: String
 	}
 }
 
 const schema = new Schema(data)
-
-//Add middleware
-//Create avatar image path from document's id
-schema.pre('save', function() {
-	this.avatar = `${process.env.ADDRESS}/static/avatars/${this._id}.webp`
-})
 
 //Create and export model
 export const User = mongoose.model('user', schema)
