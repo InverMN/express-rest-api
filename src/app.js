@@ -24,7 +24,7 @@ export function run(method = 'production') {
 		
 		/* Add controllers to app */
 		for(const controller in Controllers) {
-			app.use('/', Controllers[controller].router)
+			app.use('/api/v1', Controllers[controller].router)
 		}
 		
 		/* Start listening */
