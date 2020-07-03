@@ -1,8 +1,6 @@
 export function parseError(error) {
 	let errorDetails = {}
 
-	console.log(error)
-
 	if(isMongooseError(error))
 		if(isDuplicationError(error))
 			errorDetails = parseDuplicationError(error)
@@ -149,7 +147,6 @@ export function parseCustomError(message) {
 				type: 'unknown',
 				code: 500
 			}
-			console.error('Unhandled custom error:', message)
 	}
 	
 	return errorDetails
