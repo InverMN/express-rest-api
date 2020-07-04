@@ -20,5 +20,9 @@ export function openTestDatabase() {
 	mongoose.connect(config.testsUris, config.options)
 	mongoose.connection.once('open', () => console.info('Connected to database'))
 	mongoose.connection.on('error', error => console.error(error))
+
+	for(const singleCollection in mongoose.connection.collections)
+		mongoose.connection.collections[singleCollection].remove()
+
 	return mongoose.connection
 }
