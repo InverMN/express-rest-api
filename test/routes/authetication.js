@@ -460,6 +460,9 @@ describe('Authentication', () => {
 				.end((err, res) => {
 					expect(res).to.have.status(200)
 					expect(res.body).to.have.keys('accessToken', 'refreshToken')
+
+					refreshToken = res.body.refreshToken
+
 					done()
 				})
 		})
