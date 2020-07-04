@@ -88,6 +88,8 @@ Authentication.post('/refresh', async (req, res) => {
 })
 
 Authentication.delete('/logout', async (req, res) => {
-	await new Token({ body: req.body.token }).save()
+	const token = req.cookies.REFRESH_TOKEN
+
+	await new Token({ body: token }).save()
 	res.sendStatus(204)
 })
