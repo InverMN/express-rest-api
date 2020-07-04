@@ -251,4 +251,49 @@ describe('Authentication', () => {
 				})
 		})
 	})
+
+	describe('/confirm', () => {
+		it('Pass empty confirmation token', done => {
+			const expectedBody = {}
+			requester
+				.get('/api/v1/confirm')
+				.end((err, res) => {
+					expect(res).to.have.status(404)
+					expect(res.body).to.deep.equal({})
+					done()
+				})
+		})
+
+		it('Pass invalid confirmation token', done => {
+			const expectedBody = {
+				error: {
+					type: 'data validation',
+					source: 'token',
+					cause: 'invalid',
+					code: 400
+				}
+			}
+			requester
+				.get('/api/v1/confirm/asdasdaa2da2d2adsda.sdasdas2daw2dasd.sASa2d2adDa')
+				.end((err, res) => {
+					expect(res).to.have.status(400)
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+
+		it('Pass correct confirmation token', done => {
+			requester
+				.get(emailVerificationURL.slice(emailVerificationURL.indexOf('/api/v1'), emailVerificationURL.length))
+				.end((err, res) => {
+					expect(res).to.have.status(200)
+					expect(res.body).to.have.keys('accessToken', 'refreshToken')
+
+					accessToken = res.body.accessToken
+					refreshToken = res.body.refreshToken
+
+					done()
+				})
+		})
+	})
 })
