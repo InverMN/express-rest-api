@@ -27,10 +27,19 @@ Authentication.post('/register', async (req, res) => {
 
 	const user = new User({ email, hashedPassword: hashPassword(password), username })
 	await user.save()
-
-	sendConfirmationEmail(user._id, email)
+	
 	createIdenticon(user.id)
-	createAndSendCredentials(user._id, res)
+	
+	if(process.env.MODE !== 'test') {
+		sendConfirmationEmail(user._id, email)
+		createAndSendCredentials(user._id, res)
+	} else {
+		const accessToken = generateAccessToken(user._id)
+		const refreshToken = generateRefreshToken(user._id)
+		const emailVerificationURL = await sendConfirmationEmail(user._id, email)
+		res.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
+		res.json({ accessToken, refreshToken, emailVerificationURL })
+	}
 })
 
 Authentication.get('/confirm/:token', async (req, res) => {

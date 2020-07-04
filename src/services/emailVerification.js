@@ -54,4 +54,6 @@ export async function sendConfirmationEmail(userId, email) {
 
 	if(process.env.MODE === 'development')
 		console.log('verify email message:', nodemailer.getTestMessageUrl(info))
+	else if(process.env.MODE === 'test')
+		return url
 }
