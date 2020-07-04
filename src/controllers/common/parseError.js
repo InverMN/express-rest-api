@@ -74,9 +74,9 @@ export function parseInvalidationError({ message }) {
 		code: 400
 	}
 		
-	//If error contains ').' it means that at the end provides "excepted" value, for example minimum length of username is written as (2).
+	//If error contains ').' it means that at the end provides "expected" value, for example minimum length of username is written as (2).
 	if(message.endsWith(').') && errorDetails.cause !== 'invalid')
-		errorDetails.excepted = parseInt(cutWord(words[14], 1, 2))
+		errorDetails.expected = parseInt(cutWord(words[14], 1, 2))
 
 	return errorDetails
 }
@@ -97,7 +97,7 @@ export function parseCustomError(message) {
 			errorDetails = {
 				type: 'authorization',
 				cause: 'forbidden',
-				excepted: words[2],
+				expected: words[2],
 				code: 403
 			}
 			break
@@ -114,7 +114,7 @@ export function parseCustomError(message) {
 				type: 'data validation',
 				source: words[1],
 				cause: 'short',
-				excepted: parseInt(words[3]),
+				expected: parseInt(words[3]),
 				code: 400
 			}
 			break
@@ -123,7 +123,7 @@ export function parseCustomError(message) {
 				type: 'data validation',
 				source: words[1],
 				cause: 'long',
-				excepted: parseInt(words[3]),
+				expected: parseInt(words[3]),
 				code: 400
 			}
 			break

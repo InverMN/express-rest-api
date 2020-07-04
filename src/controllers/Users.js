@@ -17,10 +17,10 @@ Users.post('/users', async (req, res) => {
 		throw 'missing password'
 
 	if(password.length <= 5)
-		throw 'short password excepted 6'
+		throw 'short password expected 6'
 
 	if(password.length >= 199)
-		throw 'long password excepted 200'
+		throw 'long password expected 200'
 
 	const user = new User({ email, hashedPassword: hashPassword(password), username })
 	await user.save()
@@ -56,10 +56,10 @@ Users.patch('/users/:id', Secure.OWNER, async (req, res) => {
 			throw 'missing password'
 	
 		if(password.length <= 5)
-			throw 'short password excepted 6'
+			throw 'short password expected 6'
 	
 		if(password.length >= 199)
-			throw 'long password excepted 200'
+			throw 'long password expected 200'
 
 		req.body.hashedPassword = hashPassword(password)
 	}

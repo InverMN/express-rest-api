@@ -35,7 +35,7 @@ const secureLogged = async (req, res, next) => {
 			throw 'not found user'
 
 		if(!user.isVerified)
-			throw 'forbidden excepted verified'
+			throw 'forbidden expected verified'
 		
 		req.user = user
 		next()
@@ -51,7 +51,7 @@ function verifyOwnership(ownerRelation) {
 		this.response.sendStatus(500)
 		throw 'Response body does not contain owner property'
 	} else {
-		throw 'forbidden excepted owner'
+		throw 'forbidden expected owner'
 	}
 }
 
@@ -85,7 +85,7 @@ const secureModerator = async (req, res, next) => {
 		if(user)
 			req.user = user
 		else 
-			throw 'forbidden excepted moderator'
+			throw 'forbidden expected moderator'
 
 		next()
 	} catch(error) {
