@@ -417,4 +417,68 @@ describe('Authentication', () => {
 				})
 		})
 	})
+
+	describe('/refresh', () => {
+		it('Pass no token token', done => {
+			const expectedBody = {
+				error: {
+					type: 'authorization',
+					cause: 'unauthenticated',
+					code: 401
+				}
+			}
+			requester
+				.post('/api/v1/refresh')
+				.end((err, res) => {
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+
+		it('Pass invalid JWT refresh token', done => {
+			const expectedBody = {
+				error: {
+					type: 'data validation',
+					source: 'token', 
+					cause: 'invalid',
+					code: 400
+				}
+			}
+			requester
+				.post('/api/v1/refresh')
+				.set('Cookie', `REFRESH_TOKEN=asd42sa${refreshToken}S2dSdaw`)
+				.end((err, res) => {
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+
+		it('Pass correct JWT refresh token', done => {
+			requester
+				.post('/api/v1/refresh')
+				.set('Cookie', `REFRESH_TOKEN=${refreshToken}`)
+				.end((err, res) => {
+					expect(res).to.have.status(200)
+					expect(res.body).to.have.keys('accessToken', 'refreshToken')
+					done()
+				})
+		})
+
+		it('Try to pass the same correct JWT refresh token once again', done => {
+			const expectedBody = {
+				error: {
+					type: 'authorization',
+					cause: 'unauthenticated',
+					code: 401
+				}
+			}
+			requester
+				.post('/api/v1/refresh')
+				.set('Cookie', `REFRESH_TOKEN=${refreshToken}`)
+				.end((err, res) => {
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+	})
 })
