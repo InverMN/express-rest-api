@@ -57,7 +57,7 @@ describe('Error Parser', () => {
 		describe('isCustomError()', () => {
 			it('Successfully run on error', done => {
 				assert.equal(isCustomError('long password'), true)
-				assert.equal(isCustomError('short password excepted 3'), true)
+				assert.equal(isCustomError('short password expected 3'), true)
 				assert.equal(isCustomError('incorrect password'), true)
 				assert.equal(isCustomError('missing password'), true)
 				done()
@@ -81,11 +81,11 @@ describe('Error Parser', () => {
 		})
 		describe('parseInvalidationError()', () => {
 			it('Parse "too short" invalidation error', done => {
-				chai.expect(parseInvalidationError({ message: 'user validation failed: username: Path `username` (`I`) is shorter than the minimum allowed length (2).'})).to.deep.equal({ source: 'username', cause: 'short', excepted: 2, code: 400, type: 'data validation' })
+				chai.expect(parseInvalidationError({ message: 'user validation failed: username: Path `username` (`I`) is shorter than the minimum allowed length (2).'})).to.deep.equal({ source: 'username', cause: 'short', expected: 2, code: 400, type: 'data validation' })
 				done()
 			})
 			it('Parse "too long" invalidation error', done => {
-				chai.expect(parseInvalidationError({ message: 'user validation failed: username: Path `username` (`Loooooooooooooooooooooooooooooooooooong`) is longer than the maximum allowed length (16).'})).to.deep.equal({ source: 'username', cause: 'long', excepted: 16, code: 400, type: 'data validation' })
+				chai.expect(parseInvalidationError({ message: 'user validation failed: username: Path `username` (`Loooooooooooooooooooooooooooooooooooong`) is longer than the maximum allowed length (16).'})).to.deep.equal({ source: 'username', cause: 'long', expected: 16, code: 400, type: 'data validation' })
 				done()
 			})
 			it('Parse "missing" invalidation error', done => {
@@ -102,12 +102,12 @@ describe('Error Parser', () => {
 				chai.expect(parseCustomError('missing password')).to.deep.equal({ source: 'password', cause: 'missing', code: 400, type: 'data validation' })
 				done()
 			})
-			it('Parse "short password excepted 6" error', done => {
-				chai.expect(parseCustomError('short password excepted 6')).to.deep.equal({ source: 'password', cause: 'short', excepted: 6, code: 400, type: 'data validation' })
+			it('Parse "short password expected 6" error', done => {
+				chai.expect(parseCustomError('short password expected 6')).to.deep.equal({ source: 'password', cause: 'short', expected: 6, code: 400, type: 'data validation' })
 				done()
 			})
-			it('Parse "long password excepted 256" error', done => {
-				chai.expect(parseCustomError('long password excepted 256')).to.deep.equal({ source: 'password', cause: 'long', excepted: 256, code: 400, type: 'data validation' })
+			it('Parse "long password expected 256" error', done => {
+				chai.expect(parseCustomError('long password expected 256')).to.deep.equal({ source: 'password', cause: 'long', expected: 256, code: 400, type: 'data validation' })
 				done()
 			})
 			it('Parse "incorrect password" error', done => {
