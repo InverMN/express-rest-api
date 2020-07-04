@@ -43,7 +43,7 @@ export async function createConfirmationTransport() {
 
 export async function sendConfirmationEmail(userId, email) {
 	const emailToken = await generateEmailConfirmationToken(userId)
-	const url = `http://${process.env.ADDRESS}/api/v1//confirm/${emailToken}`
+	const url = `http://${process.env.ADDRESS}/api/v1/confirm/${emailToken}`
 
 	if(lazyTransport === null) lazyTransport = await createConfirmationTransport()
 
