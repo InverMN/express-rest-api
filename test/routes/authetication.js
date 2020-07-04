@@ -5,6 +5,7 @@ const { expect } = chai
 describe('Authentication', () => {
 	let accessToken
 	let refreshToken 
+	let newRefreshToken 
 	let emailVerificationURL
 
 	describe('/register', () => {
@@ -461,7 +462,7 @@ describe('Authentication', () => {
 					expect(res).to.have.status(200)
 					expect(res.body).to.have.keys('accessToken', 'refreshToken')
 
-					refreshToken = res.body.refreshToken
+					newRefreshToken = res.body.refreshToken
 
 					done()
 				})
