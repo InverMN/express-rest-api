@@ -485,4 +485,34 @@ describe('Authentication', () => {
 				})
 		})
 	})
+
+	describe('/logout', () => {
+		it('Pass no token', done => {
+			requester
+				.delete('/api/v1/logout')
+				.end((err, res) => {
+					expect(res).to.have.status(401)
+					done()
+				})
+		})
+
+		it('Pass correct token', done => {
+			requester
+				.delete('/api/v1/logout')
+				.set('Cookie', `REFRESH_TOKEN=${newRefreshToken}`)
+				.end((err, res) => {
+					done()
+				})
+		})
+
+		it('Pass the same token', done => {
+			requester
+				.delete('/api/v1/logout')
+				.set('Cookie', `REFRESH_TOKEN=${newRefreshToken}`)
+				.end((err, res) => {
+					expect(res).to.have.status(401)
+					done()
+				})
+		})
+	})
 })
