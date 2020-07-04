@@ -296,4 +296,125 @@ describe('Authentication', () => {
 				})
 		})
 	})
+
+	describe('/login', () => {
+		it('Try to login without any request body', done => {
+			const requestBody = {}
+			const expectedBody = {
+				error: { 
+					type: 'data validation', 
+					source: 'email', 
+					cause: 'missing', 
+					code: 400 
+				}
+			}
+			requester
+				.post('/api/v1/login')
+				.send(requestBody)
+				.end((err, res) => {
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+
+		it('Pass login data without e-mail', done => {
+			const requestBody = {
+				password: 'qwaszx'
+			}
+			const expectedBody = {
+				error: { 
+					type: 'data validation', 
+					source: 'email', 
+					cause: 'missing', 
+					code: 400 
+				}
+			}
+			requester
+				.post('/api/v1/login')
+				.send(requestBody)
+				.end((err, res) => {
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+
+		it('Pass login data without password', done => {
+			const requestBody = {
+				email: 'test@gmail.com'
+			}
+			const expectedBody = {
+				error: { 
+					type: 'data validation', 
+					source: 'password', 
+					cause: 'missing', 
+					code: 400 
+				}
+			}
+			requester
+				.post('/api/v1/login')
+				.send(requestBody)
+				.end((err, res) => {
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+
+		it('Pass login data with incorrect e-mail', done => {
+			const requestBody = {
+				email: 'there.is.noone.like.that@example.com',
+				password: 'qwaszx'
+			}
+			const expectedBody = {
+				error: { 
+					type: 'authentication', 
+					source: 'email', 
+					cause: 'incorrect', 
+					code: 400 
+				}
+			}
+			requester
+				.post('/api/v1/login')
+				.send(requestBody)
+				.end((err, res) => {
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+
+		it('Pass login data with incorrect password', done => {
+			const requestBody = {
+				email: 'test@example.com',
+				password: '123456'
+			}
+			const expectedBody = {
+				error: {
+					type: 'authentication', 
+					source: 'password', 
+					cause: 'incorrect', 
+					code: 400 
+				}
+			}
+			requester
+				.post('/api/v1/login')
+				.send(requestBody)
+				.end((err, res) => {
+					expect(res.body).to.deep.equal(expectedBody)
+					done()
+				})
+		})
+
+		it('Login successfully', done => {
+			const requestBody = {
+				email: 'test@example.com',
+				password: 'qwaszx'
+			}
+			requester
+				.post('/api/v1/login')
+				.send(requestBody)
+				.end((err, res) => {
+					expect(res.body).to.have.keys('accessToken', 'refreshToken')
+					done()
+				})
+		})
+	})
 })
