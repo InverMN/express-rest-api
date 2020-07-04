@@ -90,6 +90,13 @@ Authentication.post('/refresh', async (req, res) => {
 Authentication.delete('/logout', async (req, res) => {
 	const token = req.cookies.REFRESH_TOKEN
 
-	await new Token({ body: token }).save()
-	res.sendStatus(204)
+	if(token === undefined || token === null)
+		throw 'unauthenticated'
+	
+	if(await Token.exists({ body: token }))
+		throw 'unauthenticated'
+	else {
+		new Token({ body: token}).save()
+		res.sendStatus(204)
+	}
 })
