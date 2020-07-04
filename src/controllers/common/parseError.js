@@ -1,7 +1,9 @@
 export function parseError(error) {
 	let errorDetails = {}
 
-	if(isMongooseError(error))
+	if(isJWTError(error))
+		errorDetails = parseJWTError(error)
+	else if(isMongooseError(error))
 		if(isDuplicationError(error))
 			errorDetails = parseDuplicationError(error)
 		else if(isCastError(error))
@@ -17,6 +19,7 @@ export function parseError(error) {
 }
 
 //Checkers for the error type, which help decide what parser to use
+export const isJWTError = error => typeof error === 'object' && error.name === 'JsonWebTokenError'
 export const isMongooseError = error => typeof error === 'object' && error.message !== undefined
 export const isDuplicationError = error => error.code === 11000
 export const isCastError = error => error.kind === 'ObjectId'
@@ -35,6 +38,13 @@ export const isCustomError = error => {
 }
 
 //True parsers to extract details from error
+export const parseJWTError = () => ({
+	type: 'data validation',
+	source: 'token',
+	cause: 'invalid',
+	code: 400
+})
+
 export const parseDuplicationError = ({ message }) => ({
 	//Take 8th word, which defines the duplicated property (for example 'name_1'), nextly cut its tail and set it as source  
 	type: 'data validation',
