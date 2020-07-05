@@ -58,7 +58,7 @@ Posts.patch('/posts/:id', Secure.OWNER, async (req, res) => {
 	if(post === null)
 		throw 'not found post'
 
-	req.verifyOwnership(post._id)
+	req.verifyOwnership(post.author.id)
 
 	update(post, req.body, ['title', 'body'])
 	
