@@ -1,6 +1,6 @@
 import { User } from '../models/index.js'
 import { Secure } from '../middleware/index.js'
-import { hashPassword } from '../services/password.js'
+import { hashPassword, sendConfirmationEmail } from '../services/index.js'
 import { Controller, update } from './common/index.js'
 
 export const Users = new Controller()
@@ -10,7 +10,7 @@ Users.get('/users', Secure.MODERATOR, async (req, res) => {
 	res.send(users)
 })
 
-Users.post('/users', async (req, res) => {
+Users.post('/users', Secure.MODERATOR, async (req, res) => {
 	const { username, password, email } = req.body
 
 	if(password === undefined) 
@@ -27,18 +27,22 @@ Users.post('/users', async (req, res) => {
 	res.send(user)
 })
 
-Users.get('/users/:id', async (req, res) => {
+Users.get('/users/:id', Secure.OWNER, async (req, res) => {
 	const user = await User.findOne({ _id: req.params.id })
 	if(user === null)
 		throw 'not found user'
+
+	req.verifyOwnership(user._id)	
 
 	res.send(user)
 })
 
-Users.delete('/users/:id', async (req, res) => {
+Users.delete('/users/:id', Secure.OWNER, async (req, res) => {
 	const user = await User.findOne({ _id: req.params.id })
 	if(user === null)
 		throw 'not found user'
+
+	req.verifyOwnership(user._id)	
 
 	user.remove()
 	res.send(user)
@@ -48,6 +52,8 @@ Users.patch('/users/:id', Secure.OWNER, async (req, res) => {
 	const user = await User.findOne({ _id: req.params.id })
 	if(user === null)
 		throw 'not found user'
+
+	req.verifyOwnership(user._id)	
 
 	if('password' in req.body) {
 		const { password } = req.body
