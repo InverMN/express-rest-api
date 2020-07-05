@@ -67,5 +67,12 @@ Users.patch('/users/:id', Secure.OWNER, async (req, res) => {
 	update(user, req.body, ['username','email','hashedPassword'])
 
 	await user.save()
+
+	if('email' in req.body){
+		sendConfirmationEmail(user._id, req.body.email)
+		user.isVerified = false
+		user.save()
+	}
+
 	res.send(user)
 })
