@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
+import cors from 'cors'
 import { openDatabase, openTestDatabase } from './database.js'
 import * as Controllers from './controllers/index.js'
 
@@ -15,6 +16,7 @@ export function run(method = 'production') {
 
 	app.use(bodyParser.json())
 	app.use(cookieParser())
+	app.use(cors())
 
 	app.use('/static', express.static('public'))
 	app.get('/', (_, res) => res.send('Homepage'))
