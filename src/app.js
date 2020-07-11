@@ -2,7 +2,6 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
-import cors from 'cors'
 import { openDatabase, openTestDatabase } from './database.js'
 import * as Controllers from './controllers/index.js'
 
@@ -16,7 +15,17 @@ export function run(method = 'production') {
 
 	app.use(bodyParser.json())
 	app.use(cookieParser())
-	app.use(cors({ origin: 'http://localhost:3000' }))
+	app.use('/', (req, res, next) => {
+		res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+		res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+		res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+		res.setHeader('Access-Control-Allow-Credentials', 'true')
+		next()
+	})
+
+	// app.use('/', req => {
+	// 	console.log('new request:', req)
+	// })
 
 	app.use('/static', express.static('public'))
 	app.get('/', (_, res) => res.send('Homepage'))
