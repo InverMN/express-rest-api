@@ -16,7 +16,7 @@ export function run(method = 'production') {
 
 	app.use(bodyParser.json())
 	app.use(cookieParser())
-	app.use(cors({ origin: 'http://localhost:3500' }))
+	app.use(cors({ origin: 'http://localhost:3000' }))
 
 	app.use('/static', express.static('public'))
 	app.get('/', (_, res) => res.send('Homepage'))
