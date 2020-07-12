@@ -10,6 +10,10 @@ Users.get('/users', Secure.MODERATOR, async (req, res) => {
 	res.send(users)
 })
 
+Users.get('/users/me', Secure.USER, async (req, res) => {
+	res.send(req.user)
+})
+
 Users.post('/users', Secure.MODERATOR, async (req, res) => {
 	const { username, password, email } = req.body
 
