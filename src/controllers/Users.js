@@ -11,10 +11,8 @@ Users.get('/users', Secure.MODERATOR, async (req, res) => {
 })
 
 Users.get('/users/me', Secure.USER, async (req, res) => {
-	const user = req.user
-	delete user.hashedPassword
-	user.id = user._id
-	res.send(user)
+	const { _id, username, email, isVerified, isModerator } = req.user
+	res.send({ id: _id, username, email, isVerified, isModerator })
 })
 
 Users.post('/users', Secure.MODERATOR, async (req, res) => {
