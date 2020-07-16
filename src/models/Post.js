@@ -15,11 +15,6 @@ const data = {
 		type: String,
 		required: true
 	},
-	title: {
-		type: String,
-		maxlength: 50,
-		required: true
-	},
 	replies: [{
 		type: 'ObjectId',
 		ref: 'Comment'
