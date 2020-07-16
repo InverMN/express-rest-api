@@ -5,7 +5,7 @@ import { update, appendUserReaction, Controller } from './common/index.js'
 export const Posts = new Controller()
 
 Posts.get('/posts', Secure.CHECK, async (req, res) => {
-	let posts = await Post.find()
+	let posts = await (await Post.find()).reverse()
 
 	if(req.user !== undefined)
 		posts = await appendUserReaction(posts, req.user._id)
