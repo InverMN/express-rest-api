@@ -10,7 +10,12 @@ Posts.get('/posts', Secure.CHECK, async (req, res) => {
 	if(req.user !== undefined)
 		posts = await appendUserReaction(posts, req.user._id)
 
-	res.send(posts)
+	const modifiedPosts = posts.map(singlePost => {
+		const { _id, ...otherProps } = singlePost._doc
+		return { id: _id, ...otherProps }
+	})
+
+	res.send(modifiedPosts)
 })
 
 Posts.post('/posts', Secure.USER, async (req, res) => {
