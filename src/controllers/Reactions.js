@@ -53,42 +53,36 @@ Reactions.post('/unlike/:id', Secure.USER, async (req, res) => {
 })
 
 async function like(document, user) {
-	if(user.id.toString() !== document.author.id.toString()) {
-		const feedback = await Feedback.findById(document.popularity.feedback)
-		if(!feedback.positive.includes(user._id)) {
-			feedback.positive.push(user._id)
-			await feedback.save()
-			document.popularity.sum = feedback.positive.length - feedback.negative.length
-			await document.save()
-		}
-	}
-}
-
-async function dislike(document, user) {
-	if(user.id.toString() !== document.author.id.toString()) {
-		const feedback = await Feedback.findById(document.popularity.feedback)
-		if(!feedback.negative.includes(user._id)) {
-			feedback.negative.push(user._id)
-			await feedback.save()
-			document.popularity.sum = feedback.positive.length - feedback.negative.length
-			await document.save()
-		}
-	}
-}
-
-async function unlike(document, user) {
-	if(user.id.toString() !== document.author.id.toString()) {
-		const feedback = await Feedback.findById(document.popularity.feedback)
-
-		if(feedback.positive.includes(user._id))
-			removeFromArray(feedback.positive, user._id)
-		else if(feedback.negative.includes(user._id)) 
-			removeFromArray(feedback.negative, user._id)
-
+	const feedback = await Feedback.findById(document.popularity.feedback)
+	if(!feedback.positive.includes(user._id)) {
+		feedback.positive.push(user._id)
 		await feedback.save()
 		document.popularity.sum = feedback.positive.length - feedback.negative.length
 		await document.save()
 	}
+}
+
+async function dislike(document, user) {
+	const feedback = await Feedback.findById(document.popularity.feedback)
+	if(!feedback.negative.includes(user._id)) {
+		feedback.negative.push(user._id)
+		await feedback.save()
+		document.popularity.sum = feedback.positive.length - feedback.negative.length
+		await document.save()
+	}
+}
+
+async function unlike(document, user) {
+	const feedback = await Feedback.findById(document.popularity.feedback)
+
+	if(feedback.positive.includes(user._id))
+		removeFromArray(feedback.positive, user._id)
+	else if(feedback.negative.includes(user._id)) 
+		removeFromArray(feedback.negative, user._id)
+
+	await feedback.save()
+	document.popularity.sum = feedback.positive.length - feedback.negative.length
+	await document.save()
 }
 
 function removeFromArray(array, element) {
