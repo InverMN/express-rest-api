@@ -32,7 +32,9 @@ Posts.post('/posts', Secure.USER, async (req, res) => {
 
 	const post = new Post(data) 
 	await post.save()
-	res.send(post)
+
+	const { _id, ...otherProps } = post._doc
+	res.send({ id: _id, ...otherProps })
 })
 
 Posts.get('/posts/:id', Secure.CHECK, async (req, res) => {
@@ -43,7 +45,8 @@ Posts.get('/posts/:id', Secure.CHECK, async (req, res) => {
 	if(req.user !== undefined)
 		post = await appendUserReaction(post, req.user._id)
 
-	res.send(post)
+	const { _id, ...otherProps } = post._doc
+	res.send({ id: _id, ...otherProps })
 })
 
 Posts.delete('/posts/:id', Secure.OWNER, async (req, res) => {
@@ -53,7 +56,8 @@ Posts.delete('/posts/:id', Secure.OWNER, async (req, res) => {
 
 	req.verifyOwnership(post.author.id)
 	await post.remove()
-	res.send(post)
+	const { _id, ...otherProps } = post._doc
+	res.send({ id: _id, ...otherProps })
 })
 
 Posts.patch('/posts/:id', Secure.OWNER, async (req, res) => {
@@ -69,5 +73,6 @@ Posts.patch('/posts/:id', Secure.OWNER, async (req, res) => {
 	
 	post.editedAt = Date.now()
 	await post.save()
-	res.send(post)
+	const { _id, ...otherProps } = post._doc
+	res.send({ id: _id, ...otherProps })
 })
