@@ -18,7 +18,7 @@ async function appendUserReactionToSingle(document, userId) {
 	else if(feedback.negative.includes(userId))
 		data.userReaction = 'negative'
 	else 
-		data.userReaction = 'none'
+		data.userReaction = 'neutral'
 
 	return data
 }
