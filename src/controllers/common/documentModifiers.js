@@ -22,3 +22,40 @@ async function appendUserReactionToSingle(document, userId) {
 
 	return data
 }
+
+export function documentToData(input){
+	input = extractData(input)
+	input = renameID(input)
+	input = removeV(input)
+	return input
+}
+
+function renameID(input) {
+	if(input instanceof Array) {
+		return input.map(singlePost => {
+			const { _id, ...otherProps } = singlePost
+			return { id: _id, ...otherProps }
+		})
+	} else {
+		const { _id, ...otherProps } = input
+		return { id: _id, ...otherProps }
+	}
+}
+
+function removeV(input) {
+	if(input instanceof Array) {
+		return input.map(singlePost => {
+			const { __v, ...otherProps } = singlePost
+			return { ...otherProps }
+		})
+	} else {
+		const { __v, ...otherProps } = input
+		return { ...otherProps }
+	}
+}
+
+function extractData(input) {
+	if(input instanceof Array)
+		return input.map(singleDocument => singleDocument._doc)
+	else return input._doc
+}
