@@ -8,7 +8,7 @@ export async function appendUserReaction(input, userId) {
 }
 
 async function appendUserReactionToSingle(document, userId) {
-	const data = { ...document._doc }
+	const data = { ...document }
 	
 	const feedbackId = data.popularity.feedback
 	const feedback = await Feedback.findById(feedbackId)
