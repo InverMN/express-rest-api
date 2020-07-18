@@ -1,21 +1,18 @@
 import { Secure } from '../middleware/index.js'
 import { Post } from '../models/index.js'
-import { update, appendUserReaction, Controller } from './common/index.js'
+import { update, appendUserReaction, Controller, documentToData } from './common/index.js'
 
 export const Posts = new Controller()
 
 Posts.get('/posts', Secure.CHECK, async (req, res) => {
 	let posts = await (await Post.find()).reverse()
 
+	posts = documentToData(posts)
+
 	if(req.user !== undefined)
 		posts = await appendUserReaction(posts, req.user._id)
 
-	const modifiedPosts = posts.map(singlePost => {
-		const { _id, ...otherProps } = singlePost._doc
-		return { id: _id, ...otherProps }
-	})
-
-	res.send(modifiedPosts)
+	res.send(posts)
 })
 
 Posts.post('/posts', Secure.USER, async (req, res) => {
