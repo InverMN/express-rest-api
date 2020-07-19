@@ -5,7 +5,7 @@ import { update, appendUserReaction, Controller, documentToData } from './common
 export const Posts = new Controller()
 
 Posts.get('/posts', Secure.CHECK, async (req, res) => {
-	let posts = await (await Post.find().populate('replies')).reverse()
+	let posts = await (await Post.find().populate({ path: 'replies', populate: { path: 'replies', model: 'Comment' } })).reverse()
 
 	posts = documentToData(posts)
 
