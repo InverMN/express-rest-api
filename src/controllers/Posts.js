@@ -9,8 +9,20 @@ Posts.get('/posts', Secure.CHECK, async (req, res) => {
 
 	posts = documentToData(posts)
 
-	if(req.user !== undefined)
+	if(req.user !== undefined) {
 		posts = await appendUserReaction(posts, req.user._id)
+		try {
+			posts = await Promise.all(posts.map(async singlePost => {
+				let comments = await appendUserReaction(singlePost.replies, req.user._id)
+
+				comments = await Promise.all(comments.map(async singleComment => ({ ...singleComment, replies: await  appendUserReaction(singleComment.replies, req.user._id)})))
+
+				return { ...singlePost, replies:  comments}
+			}))
+		} catch(error) {
+			console.log(error)
+		}
+	}
 
 	res.send(posts)
 })
