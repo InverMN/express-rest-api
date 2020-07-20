@@ -28,10 +28,9 @@ Posts.get('/posts', Secure.CHECK, async (req, res) => {
 })
 
 Posts.post('/posts', Secure.USER, async (req, res) => {
-	const { title, body } = req.body
+	const {  body } = req.body
 	const user = req.user
 	const data = {
-		title,
 		body,
 		author: {
 			username: user.username,
