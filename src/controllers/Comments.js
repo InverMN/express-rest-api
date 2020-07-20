@@ -46,7 +46,7 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 	}
 
 	target.replies.push(comment._id)
-	comment.save()
+	await comment.save()
 	target.save()
 
 	res.send(comment)
