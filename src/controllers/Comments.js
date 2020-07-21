@@ -1,6 +1,6 @@
 import { Secure } from '../middleware/index.js'
 import { Comment, Post } from '../models/index.js'
-import { update, appendUserReaction, Controller } from './common/index.js'
+import { update, appendUserReaction, Controller, documentToData } from './common/index.js'
 
 export const Comments = new Controller()
 
@@ -30,7 +30,7 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 		body 
 	}
 
-	const comment = await new Comment(data)
+	let comment = await new Comment(data)
 
 	let target = await Post.findById(targetId) || await Comment.findById(targetId)
 
@@ -46,8 +46,11 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 	}
 
 	target.replies.push(comment._id)
-	comment.save()
+	await comment.save()
 	target.save()
+
+	comment =  documentToData(comment)
+	comment = await appendUserReaction(comment, req.user._id)
 
 	res.send(comment)
 })
@@ -66,7 +69,7 @@ Comments.delete('/comments/:id', Secure.OWNER, async (req, res) => {
 Comments.patch('/comments/:id', Secure.OWNER, async (req, res) => {
 	const targetId = req.params.id
 
-	const comment = await Comment.findById(targetId)
+	let comment = await Comment.findById(targetId)
 	if(comment === null)
 		throw 'not found comment'
 	
