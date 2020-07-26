@@ -2,7 +2,7 @@ import { User } from '../models/index.js'
 import { Secure } from '../middleware/index.js'
 import { hashPassword, sendConfirmationEmail } from '../services/index.js'
 import { Controller, update } from './common/index.js'
-import Sharp from 'sharp'
+import JIMP from 'jimp'
 
 export const Users = new Controller()
 
@@ -90,6 +90,9 @@ Users.patch('/users/:id', Secure.OWNER, async (req, res) => {
 })
 
 Users.post('/avatars', Secure.USER, async (req, res) => {
-	Sharp(req.files.file.data).toFile(`public/avatars/${req.user._id}.png`)
+	JIMP.read(req.files.file.data, (err, avatar) => {
+		if(err) throw err
+		avatar.cover(256, 256).write(`public/avatars/${req.user._id}.png`)
+	})
 	res.sendCode(200)
 })
