@@ -91,8 +91,7 @@ Users.patch('/users/:id', Secure.OWNER, async (req, res) => {
 
 Users.post('/avatars', Secure.USER, async (req, res) => {
 	JIMP.read(req.files.file.data, (err, avatar) => {
-		if(err) throw err
-		avatar.cover(256, 256).write(`public/avatars/${req.user._id}.png`)
+		if(!err) avatar.cover(256, 256).write(`public/avatars/${req.user._id}.png`)
 	})
 	res.sendCode(200)
 })
