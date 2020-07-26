@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
+import fileUpload from 'express-fileupload'
 import { openDatabase, openTestDatabase } from './database.js'
 import * as Controllers from './controllers/index.js'
 
@@ -15,6 +16,7 @@ export function run(method = 'production') {
 
 	app.use(bodyParser.json())
 	app.use(cookieParser())
+	app.use(fileUpload())
 	app.use('/', (req, res, next) => {
 		res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
 		res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization')
@@ -22,10 +24,6 @@ export function run(method = 'production') {
 		res.setHeader('Access-Control-Allow-Credentials', 'true')
 		next()
 	})
-
-	// app.use('/', req => {
-	// 	console.log('new request:', req)
-	// })
 
 	app.use('/static', express.static('public'))
 	app.get('/', (_, res) => res.send('Homepage'))
