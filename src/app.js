@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import fileUpload from 'express-fileupload'
 import { openDatabase, openTestDatabase } from './database.js'
 import * as Controllers from './controllers/index.js'
+import { createSocketServer } from './socket/index.js'
 
 export function run(method = 'production') {
 	if(method === 'production') openDatabase() 
@@ -38,6 +39,9 @@ export function run(method = 'production') {
 	console.info(`Listening on localhost:${port}`)
 	
 	app.server = app.listen(port)
+
+	/* Start socket server */
+	createSocketServer(app)
 
 	return app
 }
