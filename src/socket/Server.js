@@ -5,8 +5,7 @@ import { verifyAccessToken } from '../services/index.js'
 import { User as UserModel } from '../models/index.js'
 
 export class Server {
-	constructor(expressApp) {
-		const httpServer = createServer(expressApp)
+	constructor(httpServer) {
 		const server = createSocket(httpServer)
 		const onlineUsers = new OnlineUsers()
 	
@@ -18,11 +17,11 @@ export class Server {
 					const user = new User(userData, client)
 	
 					onlineUsers.add(user)
-					client.send('login', { status: 'success' })
+					client.emit('login', { status: 'success' })
 					
 					client.on('disconnect', () => onlineUsers.remove(id))
 				} catch {
-					client.send('login', { status: 'failed' })
+					client.emit('login', { status: 'failed' })
 				}
 			})
 		})
@@ -34,6 +33,6 @@ export class Server {
 
 export let server
 
-export function createSocketServer(expressApp) {
-	server = new Server(expressApp)
+export function createSocketServer(httpServer) {
+	server = new Server(httpServer)
 }

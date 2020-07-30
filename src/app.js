@@ -41,7 +41,7 @@ export function run(method = 'production') {
 	app.server = app.listen(port)
 
 	/* Start socket server */
-	createSocketServer(app)
+	createSocketServer(app.server)
 
 	return app
 }
