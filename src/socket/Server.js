@@ -4,7 +4,7 @@ import { OnlineUsers, User } from './index.js'
 import { verifyAccessToken } from '../services/index.js'
 import { User as UserModel } from '../models/index.js'
 
-class Server {
+export class Server {
 	constructor(expressApp) {
 		const httpServer = createServer(expressApp)
 		const server = createSocket(httpServer)
