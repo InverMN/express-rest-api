@@ -19,11 +19,12 @@ export class Server {
 	
 					onlineUsers.add(user)
 					client.send('login', { status: 'success' })
+					
+					client.on('disconnect', () => onlineUsers.remove(id))
 				} catch {
 					client.send('login', { status: 'failed' })
 				}
 			})
-	
 		})
 
 		this.serverSocket = server
