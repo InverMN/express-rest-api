@@ -20,6 +20,7 @@ export class Server {
 					client.emit('login', { status: 'success' })
 					
 					client.on('disconnect', () => onlineUsers.remove(id))
+					client.on('logout', () => onlineUsers.remove(id))
 				} catch {
 					client.emit('login', { status: 'failed' })
 				}
