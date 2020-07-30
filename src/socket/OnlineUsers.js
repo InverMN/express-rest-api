@@ -1,17 +1,18 @@
 export class OnlineUsers {
 	constructor() {
-		this.users = []
+		this.users = {}
 	}
 
 	add(newUser) {
-		this.users.push(newUser)
+		const userId = String(newUser.data._id)
+		this.users[userId] = newUser
 	}
 
 	get(userId) {
-		return this.users.find(user => user.id === userId)
+		return this.user[userId]
 	}
 
 	remove(userId) {
-		this.users = this.users.filter(user => user.id !== userId)
+		delete this.users[userId]
 	}
 }
