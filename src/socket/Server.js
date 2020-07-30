@@ -1,8 +1,8 @@
 import createSocket from 'socket.io'
 import { createServer } from 'http'
-import { OnlineUsers, User } from './index'
-import { verifyAccessToken } from '../services/index'
-import { User as UserModel } from '../models/index'
+import { OnlineUsers, User } from './index.js'
+import { verifyAccessToken } from '../services/index.js'
+import { User as UserModel } from '../models/index.js'
 
 class Server {
 	constructor(expressApp) {
