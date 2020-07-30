@@ -32,3 +32,7 @@ export class Server {
 }
 
 export let server
+
+export function createSocketServer(expressApp) {
+	server = new Server(expressApp)
+}
