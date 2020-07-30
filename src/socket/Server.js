@@ -4,7 +4,7 @@ import { OnlineUsers, User } from './index'
 import { verifyAccessToken } from '../services/index'
 import { User as UserModel } from '../models/index'
 
-export class Server {
+class Server {
 	constructor(expressApp) {
 		const httpServer = createServer(expressApp)
 		const server = createSocket(httpServer)
@@ -30,3 +30,5 @@ export class Server {
 		this.onlineUsers = onlineUsers
 	}
 }
+
+export let server
