@@ -1,6 +1,8 @@
 import { Secure } from '../middleware/index.js'
 import { Comment, Post } from '../models/index.js'
+import { NotificationSubjects } from '../models/common/index.js'
 import { update, appendUserReaction, Controller, documentToData } from './common/index.js'
+import { createNotification } from '../services/notifications.js'
 
 export const Comments = new Controller()
 
@@ -48,6 +50,9 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 	target.replies.push(comment._id)
 	await comment.save()
 	target.save()
+
+	const notificationSubject = target.collection.name === 'posts' ?  NotificationSubjects.REPLIED_POST : NotificationSubjects.REPLIED_COMMENT
+	createNotification(req.user._id, target.author.id, notificationSubject, null)
 
 	comment =  documentToData(comment)
 	comment = await appendUserReaction(comment, req.user._id)
