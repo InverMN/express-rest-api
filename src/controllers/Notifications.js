@@ -15,3 +15,10 @@ Notifications.delete('/notifications/:id', Secure.OWNER, async (req, res) => {
 	notification.remove()
 	res.send(documentToData(notification))
 })
+
+Notifications.patch('/notifications/:id', Secure.OWNER, async (req, res) => {
+	const notification = await Notification.findById(req.params.id)
+	req.verifyOwnership(notification.receiver.id)
+	notification.checked = true
+	res.sendCode(200)
+})
