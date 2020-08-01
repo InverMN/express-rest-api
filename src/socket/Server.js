@@ -1,5 +1,4 @@
 import createSocket from 'socket.io'
-import { createServer } from 'http'
 import { OnlineUsers, User } from './index.js'
 import { verifyAccessToken } from '../services/index.js'
 import { User as UserModel } from '../models/index.js'
@@ -29,6 +28,10 @@ export class Server {
 
 		this.serverSocket = server
 		this.onlineUsers = onlineUsers
+	}
+
+	sendNotification(notificationDocument) {
+		
 	}
 }
 
