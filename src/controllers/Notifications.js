@@ -5,7 +5,7 @@ import { Controller, documentToData } from './common/index.js'
 export const Notifications = new Controller()
 
 Notifications.get('/notifications', Secure.USER, async (req, res) => {
-	const notifications = await Notification.find({ receiver: { id: req.user._id } })
+	const notifications = await (await Notification.find({ 'receiver.id': req.user._id })).reverse()
 	res.send(documentToData(notifications))
 })
 
