@@ -9,7 +9,7 @@ export class OnlineUsers {
 	}
 
 	get(userId) {
-		return this.user[userId]
+		return this.users[userId]
 	}
 
 	remove(userId) {
