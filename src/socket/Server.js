@@ -19,7 +19,7 @@ export class Server {
 					onlineUsers.set(id, user)
 					client.emit('login', { status: 'success' })
 					
-					client.on('disconnect', () => onlineUsers.remove(id))
+					client.on('disconnect', () => onlineUsers.delete(id))
 					client.on('logout', () => onlineUsers.delete(id))
 				} catch {
 					client.emit('login', { status: 'failed' })
