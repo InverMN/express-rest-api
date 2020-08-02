@@ -50,11 +50,14 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 	target.replies.push(comment._id)
 	await comment.save()
 	target.save()
-
-	const notificationSubject = target.collection.name === 'posts' ?  NotificationSubjects.REPLIED_POST : NotificationSubjects.REPLIED_COMMENT
-	createNotification(req.user._id, target.author.id, notificationSubject, null)
-
+	
 	comment =  documentToData(comment)
+
+	if(String(req.user._id) !== String(target.author.id)) {
+		const notificationSubject = target.collection.name === 'posts' ?  NotificationSubjects.REPLIED_POST : NotificationSubjects.REPLIED_COMMENT
+		createNotification(req.user._id, target.author.id, notificationSubject, null)
+	}
+
 	comment = await appendUserReaction(comment, req.user._id)
 
 	res.send(comment)
