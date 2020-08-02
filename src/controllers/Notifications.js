@@ -20,5 +20,6 @@ Notifications.patch('/notifications/:id', Secure.OWNER, async (req, res) => {
 	const notification = await Notification.findById(req.params.id)
 	req.verifyOwnership(notification.receiver.id)
 	notification.checked = true
+	notification.save()
 	res.sendCode(200)
 })
