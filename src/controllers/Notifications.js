@@ -16,6 +16,11 @@ Notifications.delete('/notifications/:id', Secure.OWNER, async (req, res) => {
 	res.send(documentToData(notification))
 })
 
+Notifications.delete('/notifications', Secure.USER, async (req, res) => {
+	await Notification.remove({ 'receiver.id': String(req.user._id) })
+	res.sendCode(200)
+})
+
 Notifications.patch('/notifications/:id', Secure.OWNER, async (req, res) => {
 	const notification = await Notification.findById(req.params.id)
 	req.verifyOwnership(notification.receiver.id)
