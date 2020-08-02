@@ -1,6 +1,6 @@
 import createSocket from 'socket.io'
 import { documentToData } from '../controllers/common/index.js'
-import { OnlineUsers, User } from './index.js'
+import { User } from './index.js'
 import { verifyAccessToken } from '../services/index.js'
 import { User as UserModel } from '../models/index.js'
 
