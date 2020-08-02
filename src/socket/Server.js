@@ -31,7 +31,9 @@ export class Server {
 	}
 
 	sendNotification(notificationDocument) {
-		
+		const user = this.onlineUsers.get(notificationDocument.receiver.id)
+		if(user === undefined) return
+		else user.socket.emit('notification', notificationDocument)
 	}
 }
 
