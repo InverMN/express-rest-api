@@ -46,15 +46,25 @@ Posts.post('/posts', Secure.USER, async (req, res) => {
 })
 
 Posts.get('/posts/:id', Secure.CHECK, async (req, res) => {
-	let post = await Post.findById(req.params.id) 
+	let post = await Post.findById(req.params.id).populate({ path: 'replies', populate: { path: 'replies', model: 'Comment' } })
 	if(post === null)
 		throw 'not found post'
 
-	if(req.user !== undefined)
-		post = await appendUserReaction(post, req.user._id)
+		post = documentToData(post)
 
-	const { _id, ...otherProps } = post._doc
-	res.send({ id: _id, ...otherProps })
+	if(req.user !== undefined) {
+		post = await appendUserReaction(post, req.user._id)
+		try {
+			let comments = post.replies
+			comments = await appendUserReaction(comments, req.user._id)
+			comments = await Promise.all(comments.map(async singleComment => ({ ...singleComment, replies: await  appendUserReaction(singleComment.replies, req.user._id)})))
+			post.replies = comments
+		} catch(error) {
+			console.log(error)
+		}
+	}
+
+	res.send(post)
 })
 
 Posts.delete('/posts/:id', Secure.OWNER, async (req, res) => {
