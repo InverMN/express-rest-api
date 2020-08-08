@@ -55,7 +55,8 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 
 	if(String(req.user._id) !== String(target.author.id)) {
 		const notificationSubject = target.collection.name === 'posts' ?  NotificationSubjects.REPLIED_POST : NotificationSubjects.REPLIED_COMMENT
-		createNotification(req.user._id, target.author.id, notificationSubject, null)
+		const postId = target.collection.name === 'comments' ? (await Post.findOne({ replies: { $in: [target._id] } }))._id : target._id 
+		createNotification(req.user._id, target.author.id, notificationSubject, { replyId: comment.id, postId })
 	}
 
 	comment = await appendUserReaction(comment, req.user._id)
