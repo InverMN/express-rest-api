@@ -16,6 +16,10 @@ const data = {
 	createdAt: {
 		type: Date,
 		default: Date.now
+	},
+	times: {
+		type: Number,
+		default: 1
 	}
 }
 
