@@ -1,8 +1,19 @@
 import { Controller } from './common/index.js'
 import { Secure } from '../middleware/index.js'
 import { Report, Post, Comment } from '../models/index.js'
+import { documentToData } from './common/index.js'
 
 export const Reports = new Controller()
+
+Reports.get('/reports', Secure.MODERATOR, async (req, res) => {
+	try {
+		const reports = await Report.find()
+		res.send(documentToData(reports))
+
+	} catch(error) {
+		console.log(error)
+	}
+})
 
 Reports.post('/report/:target/:id', Secure.USER, async (req, res) => {
 	const { target: targetType, id: targetId } = req.params
