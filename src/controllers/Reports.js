@@ -6,13 +6,8 @@ import { documentToData } from './common/index.js'
 export const Reports = new Controller()
 
 Reports.get('/reports', Secure.MODERATOR, async (req, res) => {
-	try {
-		const reports = await Report.find()
-		res.send(documentToData(reports))
-
-	} catch(error) {
-		console.log(error)
-	}
+	const reports = await Report.find()
+	res.send(documentToData(reports))
 })
 
 Reports.post('/report/:target/:id', Secure.USER, async (req, res) => {
