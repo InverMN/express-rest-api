@@ -47,6 +47,6 @@ Reports.post('/report/:target/:id', Secure.USER, async (req, res) => {
 })
 
 Reports.delete('/reports/:id', Secure.MODERATOR, async (req, res) => {
-	Report.findByIdAndDelete(req.params.id)
-	res.sendCode(200)
+	await Report.findByIdAndDelete(req.params.id)
+	res.send('OK')
 })
