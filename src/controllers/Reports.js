@@ -18,8 +18,17 @@ Reports.post('/report/:target/:id', Secure.USER, async (req, res) => {
 	
 	if(!(doesTargetExist || isTargetTypeCorrect)) res.sendCode(400)
 	
-	const postId = targetType === 'post' ? targetId : (await Post.findOne({ replies: { $in: [targetId] } })).id 
-	
+	let postId
+
+	if(targetType === 'post')
+		postId = targetId
+	else if(await Post.exists({ replies: { $in: [targetId] } }))
+		postId = (await Post.findOne({ replies: { $in: [targetId] } })).id
+	else {
+		let superParentComment = await Comment.findOne({ replies: { $in: [targetId] } })
+		postId = (await Post.findOne({ replies: { $in: [superParentComment.id] } })).id
+	}
+
 	const data = { postId }
 	if(targetType !== 'post') data.replyId = targetId
 	
