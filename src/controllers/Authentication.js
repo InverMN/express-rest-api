@@ -6,11 +6,15 @@ export const Authentication = new Controller()
 
 const day = 86400000
 
-function createAndSendCredentials(userId, response) {
+function createAndSendCredentials(userId, response, redirect = false) {
 	const accessToken = generateAccessToken(userId)
 	const refreshToken = generateRefreshToken(userId)
 	response.cookie('REFRESH_TOKEN', refreshToken, { maxAge: day*15, httpOnly: true })
-	response.json({ accessToken, refreshToken })
+
+	if(redirect === true)
+		response.redirect('http://localhost:3000')
+	else
+		response.json({ accessToken, refreshToken })
 }
 
 Authentication.post('/register', async (req, res) => {
@@ -44,15 +48,13 @@ Authentication.post('/register', async (req, res) => {
 
 Authentication.get('/confirm/:token', async (req, res) => {
 	const userId = (await verifyEmailConfirmationToken(req.params.token)).id
-	// if(userId === undefined)
-	// 	throw 'unauthenticated'
 
 	const user = await User.findOne({ _id: userId })
 
 	user.isVerified = true
 	await user.save()
 
-	createAndSendCredentials(user._id, res)
+	createAndSendCredentials(user._id, res, true)
 })
 
 Authentication.post('/login', async (req, res) => {
