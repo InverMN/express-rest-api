@@ -6,7 +6,6 @@ export async function processMentions({ body, senderId, postId, replyId }) {
 	const words = body.split(/ |<|>/)
 
 	words.forEach(async word => {
-		console.log(word)
 		if(word.startsWith('@')) {
 			const username = word.replace(/@/, '')
 
