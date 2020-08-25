@@ -1,6 +1,7 @@
 import { Secure } from '../middleware/index.js'
 import { Post } from '../models/index.js'
 import { update, appendUserReaction, Controller, documentToData } from './common/index.js'
+import { processMentions } from '../services/index.js'
 
 export const Posts = new Controller()
 
@@ -43,8 +44,10 @@ Posts.post('/posts', Secure.USER, async (req, res) => {
 	const post = new Post(data) 
 	await post.save()
 
-	const { _id, ...otherProps } = post._doc
-	res.send({ id: _id, ...otherProps })
+	const document = documentToData(post)
+	processMentions({ body, senderId: req.user.id, postId: document.id })
+
+	res.send(document)
 })
 
 Posts.get('/posts/:id', Secure.CHECK, async (req, res) => {
