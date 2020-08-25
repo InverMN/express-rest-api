@@ -2,7 +2,7 @@ import { Secure } from '../middleware/index.js'
 import { Comment, Post } from '../models/index.js'
 import { NotificationSubjects } from '../models/common/index.js'
 import { update, appendUserReaction, Controller, documentToData } from './common/index.js'
-import { createNotification } from '../services/notifications.js'
+import { createNotification, processMentions } from '../services/index.js'
 
 export const Comments = new Controller()
 
@@ -60,6 +60,7 @@ Comments.post('/comments/:id', Secure.USER ,async (req, res) => {
 	}
 
 	comment = await appendUserReaction(comment, req.user._id)
+	processMentions({ body, senderId: req.user.id, postId: comment.id })
 
 	res.send(comment)
 })
